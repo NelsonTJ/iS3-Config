@@ -1,0 +1,8 @@
+﻿<Window x:Class="iS3.Config.PrjLocWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PrjLocWindow" Height="450" Width="800">
+    <Grid>
+        
+    </Grid>
+</Window>
