@@ -70,14 +70,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PrjLocWindow.xaml">
+    <Page Include="ProjInfoWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrjLocWindow.xaml.cs">
-      <DependentUpon>PrjLocWindow.xaml</DependentUpon>
+    <Compile Include="ProjInfoWindow.xaml.cs">
+      <DependentUpon>ProjInfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
