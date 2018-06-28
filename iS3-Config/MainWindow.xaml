@@ -11,7 +11,7 @@
         <Button Content="my Data Location..." HorizontalAlignment="Left" Margin="37,177,0,0" VerticalAlignment="Top" Width="200" Height="44" FontSize="18" Click="myDatBtn_Click"/>
         <Label x:Name="iS3Labl" Content="iS3 Path" HorizontalAlignment="Center" Height="32" Margin="260,116,24,0" VerticalAlignment="Top" Width="508" FontSize="18"/>
         <Label x:Name="myLabl" Content="my Data Path" HorizontalAlignment="Center" Height="36" Margin="260,177,24,0" VerticalAlignment="Top" Width="508" FontSize="18"/>
-        <Button Content="Start configuration" HorizontalAlignment="Left" Margin="260,305,0,0" VerticalAlignment="Top" Width="253" FontSize="24" Height="52" Click="Button_Click"/>
+        <Button Content="Start configuration" HorizontalAlignment="Left" Margin="260,305,0,0" VerticalAlignment="Top" Width="253" FontSize="24" Height="52" Click="startBtn_Click"/>
 
     </Grid>
 </Window>

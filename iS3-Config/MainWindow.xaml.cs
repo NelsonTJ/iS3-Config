@@ -68,9 +68,15 @@ namespace iS3.Config
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void startBtn_Click(object sender, RoutedEventArgs e)
         {
+            PrjLocWindow window = new PrjLocWindow();
+            window.Show();
 
+            app.MainWindow = window;
+
+            this.Close();
         }
+
     }
 }
