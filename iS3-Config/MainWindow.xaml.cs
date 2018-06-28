@@ -68,5 +68,9 @@ namespace iS3.Config
             }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
