@@ -70,7 +70,7 @@ namespace iS3.Config
 
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
-            PrjLocWindow window = new PrjLocWindow();
+            ProjInfoWindow window = new ProjInfoWindow();
             window.Show();
 
             app.MainWindow = window;
