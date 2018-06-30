@@ -23,7 +23,6 @@ namespace iS3.Config
     /// </summary>
     public partial class ProjInfoWindow : Window
     {
-        int step = 1;
         PictureMarkerSymbol _pinMarkerSymbol = new PictureMarkerSymbol();
 
         public string ProjName;
@@ -34,6 +33,7 @@ namespace iS3.Config
         {
             InitializeComponent();
 
+            StepLB.SelectedIndex = 0;
             InitializePictureMarkerSymbol();
             MyMapView.MouseDown += MyMapView_MouseDown;
         }
@@ -51,39 +51,25 @@ namespace iS3.Config
             }
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private void StepLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (step == 1)
+            int step = StepLB.SelectedIndex;
+            if (step == 0)
             {
-                prompt.Text = ">>>Step 2 of 2: Drop the project location on the map.";
-                NextBtn.Content = "Finish";
-                step = 2;
-                return;
+                prompt.Text = "Input project title in the title text box.";
+                ProjectTitleTB.Visibility = System.Windows.Visibility.Visible;
             }
-            if (step == 2)
+            else if (step == 1)
             {
-                // finish 
-                ProjName = ProjectTitleTB.Text;
-                ProjLocX = 0;
-                ProjLocY = 0;
-
-                GraphicsLayer gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
-                Graphic g = gLayer.Graphics.FirstOrDefault();
-                if (g != null)
-                {
-                    MapPoint loc = g.Geometry as MapPoint;
-                    if (loc != null)
-                    {
-                        ProjLocX = loc.X;
-                        ProjLocY = loc.Y;
-                    }
-                }
+                prompt.Text = "Drop the project location on the map.";
+                ProjectTitleTB.Visibility = System.Windows.Visibility.Hidden;
             }
         }
 
         void MyMapView_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (step == 1)
+            int step = StepLB.SelectedIndex;
+            if (step == 0)
                 return;
 
             GraphicsLayer gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
@@ -98,6 +84,26 @@ namespace iS3.Config
             };
             gLayer.Graphics.Add(g);
 
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            // finish 
+            ProjName = ProjectTitleTB.Text;
+            ProjLocX = 0;
+            ProjLocY = 0;
+
+            GraphicsLayer gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
+            Graphic g = gLayer.Graphics.FirstOrDefault();
+            if (g != null)
+            {
+                MapPoint loc = g.Geometry as MapPoint;
+                if (loc != null)
+                {
+                    ProjLocX = loc.X;
+                    ProjLocY = loc.Y;
+                }
+            }
         }
 
     }
