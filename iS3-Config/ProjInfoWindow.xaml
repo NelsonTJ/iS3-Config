@@ -14,6 +14,32 @@
             <esri:ViewpointExtent x:Key="China"
                                   XMin="8000000" XMax="15000000"
                                   YMin="1400000" YMax="6400000" />
+            <Style x:Key="ListBoxStyle" TargetType="ListBoxItem">
+                <!-- Set control template -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                 TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <!-- Set triggers -->
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="true">
+                        <Setter Property="Background" Value="Blue"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Background" Value="LightGreen"/>
+                        <Setter Property="Foreground" Value="Red"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -25,41 +51,29 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 1 -->
-        <ListBox x:Name="StepLB" 
-                 SelectionChanged="StepLB_SelectionChanged">
-            <ListBoxItem Content="Project title"/>
-            <ListBoxItem Content="Project Location"/>
-
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <!-- Set control template -->
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <Border Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                 TextBlock.Foreground="{TemplateBinding Foreground}"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-
-                    <!-- Set triggers -->
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background" Value="Blue"/>
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" Value="LightGreen"/>
-                            <Setter Property="Foreground" Value="Red"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.ItemContainerStyle>
-
-        </ListBox>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Available projects:" />
+            <ListBox x:Name="ProjectListLB" Height="200"
+                     ItemContainerStyle="{StaticResource ListBoxStyle}"
+                     SelectionChanged="ProjectListLB_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ID}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Add..." Margin="5,0,5,0" Click="Add_Click"/>
+                <Button Content="Remove" Margin="5,0,5,0" Click="Remove_Click"/>
+            </StackPanel>
+            <TextBlock Text="Configuration:" />
+            <ListBox x:Name="StepLB" Height="170"
+                     ItemContainerStyle="{StaticResource ListBoxStyle}"
+                     SelectionChanged="StepLB_SelectionChanged">
+                <ListBoxItem Content="Title"/>
+                <ListBoxItem Content="Location"/>
+            </ListBox>
+        </StackPanel>
         <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
             <esri:Map x:Name="Map"
                       InitialViewpoint="{StaticResource China}">
@@ -71,16 +85,18 @@
             </esri:Map>
         </esri:MapView>
         <TextBox x:Name="ProjectTitleTB" Grid.Column="1"
-            Text="Input project title here"
+            Text="Project title"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="10,40,0,0"
+            Margin="10,40,0,0" Visibility="Hidden"
+            TextChanged="ProjectTitleTB_TextChanged"
+            IsReadOnly="True"
             Height="35" FontSize="24" Foreground="Red" Background="Yellow"/>
 
         <!-- Row 2 -->
-        <TextBlock x:Name="prompt" Grid.Row="2" Grid.ColumnSpan="2"
+        <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
-                   Text="Text prompt" Foreground="Red" />
+                   Text="Select project from the list" Foreground="Red" />
         <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1"
                 Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>

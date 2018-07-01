@@ -1,4 +1,37 @@
-﻿using System;
+﻿//************************  Notice  **********************************
+//** This file is part of iS3
+//**
+//** Copyright (c) 2018 Tongji University iS3 Team. All rights reserved.
+//**
+//** This library is free software; you can redistribute it and/or
+//** modify it under the terms of the GNU Lesser General Public
+//** License as published by the Free Software Foundation; either
+//** version 3 of the License, or (at your option) any later version.
+//**
+//** This library is distributed in the hope that it will be useful,
+//** but WITHOUT ANY WARRANTY; without even the implied warranty of
+//** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//** Lesser General Public License for more details.
+//**
+//** In addition, as a special exception,  that plugins developed for iS3,
+//** are allowed to remain closed sourced and can be distributed under any license .
+//** These rights are included in the file LGPL_EXCEPTION.txt in this package.
+//**
+//**************************************************************************
+
+//** This program is designed for configing data files for iS3.Desktop (standalone version).
+//** The data files usually reside in the iS3-Desktop-Stand-alone\Output\Data directory,
+//** including:
+//**          ProjectList.xml
+//**          <ProjectName>.xml
+//**          <ProjectName>\*.*
+//** This program depends on the following library:
+//**          .NET Framework 4.5
+//**          ArcGIS Runtime SDK for .NET 10.2.5
+//**          iS3.Core
+//
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -49,6 +82,8 @@ namespace iS3.Config
         {
             bool? success;
 
+            // Step 1 - Config path to iS3 and data directory
+            //
             ConfPathWindow mainWnd = new ConfPathWindow();
             success = mainWnd.ShowDialog();
             if (success == null || success.Value == false)
@@ -58,7 +93,10 @@ namespace iS3.Config
             iS3Path = mainWnd.ExePath;
             dataPath = mainWnd.DataPath;
 
-            ProjInfoWindow infoWnd = new ProjInfoWindow();
+            // Step 2 - Config project title and location information
+            //
+            string projListFile = dataPath + "\\ProjectList.xml";
+            ProjInfoWindow infoWnd = new ProjInfoWindow(projListFile);
             success = infoWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
