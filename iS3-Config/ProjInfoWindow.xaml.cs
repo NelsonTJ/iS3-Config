@@ -23,11 +23,11 @@ namespace iS3.Config
     /// </summary>
     public partial class ProjInfoWindow : Window
     {
-        PictureMarkerSymbol _pinMarkerSymbol = new PictureMarkerSymbol();
+        public string ProjName = "";
+        public double ProjLocX = 0;
+        public double ProjLocY = 0;
 
-        public string ProjName;
-        public double ProjLocX;
-        public double ProjLocY;
+        PictureMarkerSymbol _pinMarkerSymbol = new PictureMarkerSymbol();
 
         public ProjInfoWindow()
         {
@@ -90,8 +90,6 @@ namespace iS3.Config
         {
             // finish 
             ProjName = ProjectTitleTB.Text;
-            ProjLocX = 0;
-            ProjLocY = 0;
 
             GraphicsLayer gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
             Graphic g = gLayer.Graphics.FirstOrDefault();
@@ -104,6 +102,9 @@ namespace iS3.Config
                     ProjLocY = loc.Y;
                 }
             }
+
+            DialogResult = true;
+            Close();
         }
 
     }

@@ -13,44 +13,53 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.Reflection;
 using System.IO;
 
 namespace iS3.Config
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ConfPathWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ConfPathWindow : Window
     {
-        App app;
+        public string ExePath = "";
+        public string DataPath = "";
 
-        public MainWindow()
+        public ConfPathWindow()
         {
             InitializeComponent();
 
-            app = App.Current as App;
-
-            iS3Labl.Content = app.iS3Path;
-            myLabl.Content = app.myDataPath;
+            SetPath();
         }
 
+        void SetPath()
+        {
+            if (ExePath.Length == 0)
+            {
+                string exeLocation = Assembly.GetExecutingAssembly().Location;
+                ExePath = System.IO.Path.GetDirectoryName(exeLocation);
+            }
+
+            DataPath = ExePath + "\\Data";
+            if (!Directory.Exists(DataPath))
+                DataPath = ExePath;
+
+            iS3Labl.Content = ExePath;
+            myLabl.Content = DataPath;
+        }
 
         private void iS3LocBtn_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = false;
-            dialog.SelectedPath = app.iS3Path;
+            dialog.SelectedPath = ExePath;
 
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                app.iS3Path = dialog.SelectedPath;
-                iS3Labl.Content = app.iS3Path;
-
-                app.myDataPath = app.iS3Path + "\\Data";
-                if (!Directory.Exists(app.myDataPath))
-                    app.myDataPath = app.iS3Path;
-                myLabl.Content = app.myDataPath;
+                ExePath = dialog.SelectedPath;
+                SetPath();
             }
         }
 
@@ -58,24 +67,20 @@ namespace iS3.Config
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowNewFolderButton = false;
-            dialog.SelectedPath = app.myDataPath;
+            dialog.SelectedPath = DataPath;
 
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                app.myDataPath = dialog.SelectedPath;
-                myLabl.Content = app.myDataPath;
+                DataPath = dialog.SelectedPath;
+                myLabl.Content = DataPath;
             }
         }
 
         private void startBtn_Click(object sender, RoutedEventArgs e)
         {
-            ProjInfoWindow window = new ProjInfoWindow();
-            window.Show();
-
-            app.MainWindow = window;
-
-            this.Close();
+            DialogResult = true;
+            Close();
         }
 
     }
