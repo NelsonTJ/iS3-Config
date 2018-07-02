@@ -1,4 +1,27 @@
-﻿using System;
+﻿//************************  Notice  **********************************
+//** This file is part of iS3
+//**
+//** Copyright (c) 2018 Tongji University iS3 Team. All rights reserved.
+//**
+//** This library is free software; you can redistribute it and/or
+//** modify it under the terms of the GNU Lesser General Public
+//** License as published by the Free Software Foundation; either
+//** version 3 of the License, or (at your option) any later version.
+//**
+//** This library is distributed in the hope that it will be useful,
+//** but WITHOUT ANY WARRANTY; without even the implied warranty of
+//** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//** Lesser General Public License for more details.
+//**
+//** In addition, as a special exception,  that plugins developed for iS3,
+//** are allowed to remain closed sourced and can be distributed under any license .
+//** These rights are included in the file LGPL_EXCEPTION.txt in this package.
+//**
+//**************************************************************************
+//**
+//** The class in this file is used to configure the ProjectList.xml
+//**
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,6 +95,7 @@ namespace iS3.Config
         {
             try
             {
+                // Load ProjectList.xml using XamlReader
                 StreamReader reader = new StreamReader(_projListFile);
                 object obj = XamlReader.Load(reader.BaseStream);
                 _projList = obj as ProjectList;
@@ -86,23 +110,74 @@ namespace iS3.Config
         {
             try
             {
-                //Stream writer = new FileStream(_projListFile + "1", FileMode.Create);
-                //XmlSerializer s = new XmlSerializer(_projList.GetType());
-                //s.Serialize(writer, _projList);
-                //writer.Close();
+                // write xml to memory stream at first
+                Stream memStream = new MemoryStream();
+                XmlAttributeOverrides overide = CreateOverrides();  // overide some attributes
+                XmlSerializer s = new XmlSerializer(typeof(ProjectList), overide);
+                s.Serialize(memStream, _projList);  // write to memory
 
-                StreamWriter writer = new StreamWriter(_projListFile + "1");
+                // replace "Locations" with "ProjectList.Locations" so XamlReader would be happy.
+                memStream.Position = 0;
+                StreamReader reader = new StreamReader(memStream);
+                string xml = reader.ReadToEnd();
+                string xaml = xml.Replace("Locations", "ProjectList.Locations");
 
-                string s = "";
-                foreach (ProjectLocation loc in _projList.Locations)
-                    s += XamlWriter.Save(loc) + "\n";
-
-
+                // overide ProjectList.xml
+                FileStream fs = new FileStream(_projListFile, FileMode.Create);
+                StreamWriter writer = new StreamWriter(fs);
+                writer.Write(xaml);
+                writer.Close();
             }
             catch (Exception error)
             {
                 MessageBox.Show(error.Message, "Error", MessageBoxButton.OK);
             }
+        }
+
+        // Write ProjectList member variables (XMin, XMax, YMin, Ymax, UseGeographicMap)
+        // and ProjectLocation member variables (ID, DefinitionFile, X, Y, Description, Default)
+        // as attributes into XML, so XamlReader can work happily.
+        XmlAttributeOverrides CreateOverrides()
+        {
+            XmlAttributeOverrides attrOverrides = new XmlAttributeOverrides();
+
+            // add root element namespace
+            attrOverrides.Add(typeof(ProjectList), new XmlAttributes()
+            {
+                XmlRoot = new XmlRootAttribute()
+                {
+                    ElementName = "ProjectList",
+                    Namespace = "clr-namespace:IS3.Core;assembly=IS3.Core"
+                }
+            });
+
+            // write ProjectList member variables as attributes
+            attrOverrides.Add(typeof(ProjectList), "XMax", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("XMax") });
+            attrOverrides.Add(typeof(ProjectList), "XMin", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("XMin") });
+            attrOverrides.Add(typeof(ProjectList), "YMax", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("YMax") });
+            attrOverrides.Add(typeof(ProjectList), "YMin", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("YMin") });
+            attrOverrides.Add(typeof(ProjectList), "UseGeographicMap", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("UseGeographicMap") });
+
+            // write ProjectLocation member variables as attributes
+            attrOverrides.Add(typeof(ProjectLocation), "ID", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("ID") });
+            attrOverrides.Add(typeof(ProjectLocation), "DefinitionFile", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("DefinitionFile") });
+            attrOverrides.Add(typeof(ProjectLocation), "X", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("X") });
+            attrOverrides.Add(typeof(ProjectLocation), "Y", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("Y") });
+            attrOverrides.Add(typeof(ProjectLocation), "Description", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("Description") });
+            attrOverrides.Add(typeof(ProjectLocation), "Default", new XmlAttributes()
+                { XmlAttribute = new XmlAttributeAttribute("Default") });
+
+            return attrOverrides;
         }
 
         private void MyMapView_Loaded(object sender, RoutedEventArgs e)
