@@ -39,6 +39,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using IS3.Core;
 
 namespace iS3.Config
 {
@@ -50,7 +51,7 @@ namespace iS3.Config
         string iS3Path = "";
         string dataPath = "";
 
-        string projName = "";
+        string projID = "";
         double projLocX = 0;
         double projLocY = 0;
 
@@ -93,18 +94,37 @@ namespace iS3.Config
             iS3Path = mainWnd.ExePath;
             dataPath = mainWnd.DataPath;
 
-            // Step 2 - Config project title and location information
+            // Step 2 - Config projects
             //
             string projListFile = dataPath + "\\ProjectList.xml";
-            ProjInfoWindow infoWnd = new ProjInfoWindow(projListFile);
-            success = infoWnd.ShowDialog();
+            ProjectsWindow projsWnd = new ProjectsWindow(projListFile);
+            success = projsWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;
             }
-            projName = infoWnd.ProjName;
-            projLocX = infoWnd.ProjLocX;
-            projLocY = infoWnd.ProjLocY;
+            projID = projsWnd.ProjID;
+            projLocX = projsWnd.ProjLocX;
+            projLocY = projsWnd.ProjLocY;
+
+            // Step 3.1 - Config project general definition
+            //
+            ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(projID, dataPath);
+            success = projGnrDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
+            ProjectDefinition projDef = projGnrDefWnd.ProjDef;
+
+            // Step 3.2 - Config project engineering maps definition
+            //
+            ProjEMapDefWindow projEMapsDefWnd = new ProjEMapDefWindow(projDef);
+            success = projEMapsDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
 
             return true;
         }

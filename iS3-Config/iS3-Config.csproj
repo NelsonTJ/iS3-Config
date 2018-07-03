@@ -76,18 +76,33 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConfigCore.cs" />
     <Compile Include="ConfPathWindow.xaml.cs">
       <DependentUpon>ConfPathWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ProjInfoWindow.xaml">
+    <Page Include="ProjEMapDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjGnrDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjInfoWindow.xaml.cs">
-      <DependentUpon>ProjInfoWindow.xaml</DependentUpon>
+    <Compile Include="ProjEMapDefWindow.xaml.cs">
+      <DependentUpon>ProjEMapDefWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjGnrDefWindow.xaml.cs">
+      <DependentUpon>ProjGnrDefWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectsWindow.xaml.cs">
+      <DependentUpon>ProjectsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

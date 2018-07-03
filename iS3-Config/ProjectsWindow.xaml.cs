@@ -48,9 +48,9 @@ namespace iS3.Config
     /// <summary>
     /// Interaction logic for ProjInfoWindow.xaml
     /// </summary>
-    public partial class ProjInfoWindow : Window
+    public partial class ProjectsWindow : Window
     {
-        public string ProjName = "";
+        public string ProjID = "";
         public double ProjLocX = 0;
         public double ProjLocY = 0;
 
@@ -59,7 +59,7 @@ namespace iS3.Config
         GraphicsLayer _gLayer;
         PictureMarkerSymbol _pinMarkerSymbol = new PictureMarkerSymbol();
 
-        public ProjInfoWindow(string projListFile)
+        public ProjectsWindow(string projListFile)
         {
             InitializeComponent();
 
@@ -69,7 +69,7 @@ namespace iS3.Config
             MyMapView.Loaded += MyMapView_Loaded;
             MyMapView.MouseDown += MyMapView_MouseDown;
 
-            LoadProjectList();
+            _projList = ConfigCore.LoadProjectList(_projListFile);
             if (_projList == null)
                 return;
             foreach (ProjectLocation loc in _projList.Locations)
@@ -91,97 +91,9 @@ namespace iS3.Config
             }
         }
 
-        void LoadProjectList()
-        {
-            try
-            {
-                // Load ProjectList.xml using XamlReader
-                StreamReader reader = new StreamReader(_projListFile);
-                object obj = XamlReader.Load(reader.BaseStream);
-                _projList = obj as ProjectList;
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK);
-            }
-        }
-
-        void WriteProjectList()
-        {
-            try
-            {
-                // write xml to memory stream at first
-                Stream memStream = new MemoryStream();
-                XmlAttributeOverrides overide = CreateOverrides();  // overide some attributes
-                XmlSerializer s = new XmlSerializer(typeof(ProjectList), overide);
-                s.Serialize(memStream, _projList);  // write to memory
-
-                // replace "Locations" with "ProjectList.Locations" so XamlReader would be happy.
-                memStream.Position = 0;
-                StreamReader reader = new StreamReader(memStream);
-                string xml = reader.ReadToEnd();
-                string xaml = xml.Replace("Locations", "ProjectList.Locations");
-
-                // overide ProjectList.xml
-                FileStream fs = new FileStream(_projListFile, FileMode.Create);
-                StreamWriter writer = new StreamWriter(fs);
-                writer.Write(xaml);
-                writer.Close();
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message, "Error", MessageBoxButton.OK);
-            }
-        }
-
-        // Write ProjectList member variables (XMin, XMax, YMin, Ymax, UseGeographicMap)
-        // and ProjectLocation member variables (ID, DefinitionFile, X, Y, Description, Default)
-        // as attributes into XML, so XamlReader can work happily.
-        XmlAttributeOverrides CreateOverrides()
-        {
-            XmlAttributeOverrides attrOverrides = new XmlAttributeOverrides();
-
-            // add root element namespace
-            attrOverrides.Add(typeof(ProjectList), new XmlAttributes()
-            {
-                XmlRoot = new XmlRootAttribute()
-                {
-                    ElementName = "ProjectList",
-                    Namespace = "clr-namespace:IS3.Core;assembly=IS3.Core"
-                }
-            });
-
-            // write ProjectList member variables as attributes
-            attrOverrides.Add(typeof(ProjectList), "XMax", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("XMax") });
-            attrOverrides.Add(typeof(ProjectList), "XMin", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("XMin") });
-            attrOverrides.Add(typeof(ProjectList), "YMax", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("YMax") });
-            attrOverrides.Add(typeof(ProjectList), "YMin", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("YMin") });
-            attrOverrides.Add(typeof(ProjectList), "UseGeographicMap", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("UseGeographicMap") });
-
-            // write ProjectLocation member variables as attributes
-            attrOverrides.Add(typeof(ProjectLocation), "ID", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("ID") });
-            attrOverrides.Add(typeof(ProjectLocation), "DefinitionFile", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("DefinitionFile") });
-            attrOverrides.Add(typeof(ProjectLocation), "X", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("X") });
-            attrOverrides.Add(typeof(ProjectLocation), "Y", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("Y") });
-            attrOverrides.Add(typeof(ProjectLocation), "Description", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("Description") });
-            attrOverrides.Add(typeof(ProjectLocation), "Default", new XmlAttributes()
-                { XmlAttribute = new XmlAttributeAttribute("Default") });
-
-            return attrOverrides;
-        }
-
         private void MyMapView_Loaded(object sender, RoutedEventArgs e)
-        {
+        
+{
             _gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
             if (_projList == null)
                 return;
@@ -210,14 +122,14 @@ namespace iS3.Config
             ProjectLocation loc = ProjectListLB.SelectedItem as ProjectLocation;
             if (loc == null)
             {
-                ProjectTitleTB.Visibility = Visibility.Hidden;
+                ProjectDescTB.Visibility = Visibility.Hidden;
                 _gLayer.Graphics.Clear();
                 return;
             }
 
-            ProjectTitleTB.Visibility = Visibility.Visible;
-            ProjectTitleTB.Text = loc.Description;
-            ProjectTitleTB.IsReadOnly = true;
+            ProjectDescTB.Visibility = Visibility.Visible;
+            ProjectDescTB.Text = loc.Description;
+            ProjectDescTB.IsReadOnly = true;
 
             _gLayer.Graphics.Clear();
             AddProjectLocationOnMap(loc);
@@ -235,17 +147,17 @@ namespace iS3.Config
             int step = StepLB.SelectedIndex;
             if (step == 0)
             {
-                PromptTB.Text = "Input project title in the title text box.";
-                ProjectTitleTB.IsReadOnly = false;
-                ProjectTitleTB.Focus();
-                ProjectTitleTB.SelectAll();
-                ProjectTitleTB.Visibility = System.Windows.Visibility.Visible;
+                PromptTB.Text = "Input project description in the text box.";
+                ProjectDescTB.IsReadOnly = false;
+                ProjectDescTB.Focus();
+                ProjectDescTB.SelectAll();
+                ProjectDescTB.Visibility = System.Windows.Visibility.Visible;
                 _gLayer.Graphics.Clear();
             }
             else if (step == 1)
             {
                 PromptTB.Text = "Drop the project location on the map.";
-                ProjectTitleTB.Visibility = System.Windows.Visibility.Hidden;
+                ProjectDescTB.Visibility = System.Windows.Visibility.Hidden;
                 AddProjectLocationOnMap(loc);
             }
         }
@@ -256,7 +168,7 @@ namespace iS3.Config
             if (loc == null)
                 return;
 
-            loc.Description = ProjectTitleTB.Text;
+            loc.Description = ProjectDescTB.Text;
         }
 
         void MyMapView_MouseDown(object sender, MouseButtonEventArgs e)
@@ -312,7 +224,17 @@ namespace iS3.Config
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            WriteProjectList();
+            ProjectLocation loc = ProjectListLB.SelectedItem as ProjectLocation;
+            if (loc == null)
+            {
+                PromptTB.Text = "Please select a project before going to next step.";
+                return;
+            }
+
+            ProjID = loc.ID;
+            ProjLocX = loc.X;
+            ProjLocY = loc.Y;
+            ConfigCore.WriteProjectList(_projListFile, _projList);
             // finish 
             DialogResult = true;
             Close();
