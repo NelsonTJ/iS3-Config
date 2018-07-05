@@ -12,7 +12,7 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="120" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <!-- Row 1 -->
@@ -49,17 +49,17 @@
             <TextBox x:Name="TitleTB" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0" 
                      Text="{Binding ProjectTitle, Mode=TwoWay}"/>
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalPathTB" Width="490" VerticalAlignment="Center" IsReadOnly="True"
+                <TextBox x:Name="LocalPathTB" Width="520" VerticalAlignment="Center" IsReadOnly="True"
                          Text="{Binding LocalFilePath, Mode=TwoWay}"/>
                 <Button x:Name="LocalPathBtn" Content="..." Width="25" HorizontalAlignment="Right" Click="PathBtn_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalTileTB" Width="490" VerticalAlignment="Center" IsReadOnly="True"
+                <TextBox x:Name="LocalTileTB" Width="520" VerticalAlignment="Center" IsReadOnly="True"
                          Text="{Binding LocalTilePath, Mode=TwoWay}"/>
                 <Button x:Name="LocalTileBtn" Content="..." Width="25" HorizontalAlignment="Right" Click="PathBtn_Click" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalDbTB" Width="490"  VerticalAlignment="Center" IsReadOnly="True"
+                <TextBox x:Name="LocalDbTB" Width="520"  VerticalAlignment="Center" IsReadOnly="True"
                          Text="{Binding LocalDatabaseName, Mode=TwoWay}"/>
                 <Button x:Name="LocalDbBtn" Content="..." Width="25" HorizontalAlignment="Right" Click="LocalDbBtn_Click" />
             </StackPanel>

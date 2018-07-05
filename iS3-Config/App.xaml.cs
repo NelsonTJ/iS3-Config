@@ -62,6 +62,8 @@ namespace iS3.Config
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
+            GdbHelper.Initialize();
+
             // open a background window that start the configuration
             Window backgroundWnd = new Window();
             this.MainWindow = backgroundWnd;

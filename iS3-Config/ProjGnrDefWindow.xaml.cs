@@ -87,12 +87,13 @@ namespace iS3.Config
         {
             string file = ProjDef.LocalDatabaseName;
             OpenFileDialog dialog = new OpenFileDialog();
+            dialog.InitialDirectory = ProjDef.LocalFilePath;
             dialog.FileName = file;
 
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                ProjDef.LocalDatabaseName = dialog.FileName;
+                ProjDef.LocalDatabaseName = dialog.SafeFileName;
 
                 // refresh UI
                 GeneralGrd.DataContext = null;

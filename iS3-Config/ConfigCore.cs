@@ -133,10 +133,6 @@ namespace iS3.Config
                         projDef.LocalFilePath = projPath + "\\" + projID;
                     if (projDef.LocalTilePath == null || projDef.LocalTilePath.Length == 0)
                         projDef.LocalTilePath = projPath + "\\" + "TPKs";
-
-                    string path = System.IO.Path.GetDirectoryName(projDef.LocalDatabaseName);
-                    if (path.Length == 0)
-                        projDef.LocalDatabaseName = projPath + "\\" + projDef.LocalDatabaseName;
                 }
 
                 reader.Close();

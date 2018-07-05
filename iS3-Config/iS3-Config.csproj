@@ -37,6 +37,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Output\libs\arcgis\Esri.ArcGISRuntime.dll</HintPath>
     </Reference>
+    <Reference Include="IS3.ArcGIS">
+      <HintPath>..\..\IS3-ArcGIS\obj\Debug\IS3.ArcGIS.dll</HintPath>
+    </Reference>
     <Reference Include="IS3.Core">
       <HintPath>..\..\IS3-Core\IS3-Core\obj\Debug\IS3.Core.dll</HintPath>
     </Reference>
@@ -95,6 +98,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GdbHelper.cs" />
     <Compile Include="ProjEMapDefWindow.xaml.cs">
       <DependentUpon>ProjEMapDefWindow.xaml</DependentUpon>
     </Compile>

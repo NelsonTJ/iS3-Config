@@ -92,8 +92,7 @@ namespace iS3.Config
         }
 
         private void MyMapView_Loaded(object sender, RoutedEventArgs e)
-        
-{
+        {
             _gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
             if (_projList == null)
                 return;

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
         Title="Project Engineering Map Definition" Height="450" Width="800">
@@ -12,14 +13,27 @@
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <!-- Row 1 -->
+        <!-- Col 1 -->
         <ListBox x:Name="EMapsLB" Margin="5,0,5,0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding MapID}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
+        
+        <!-- Col 2 -->
+        <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
+            <esri:Map x:Name="Map">
+            </esri:Map>
+        </esri:MapView>
 
-        <Grid x:Name="EMapGrd" Grid.Column="1" Visibility="Visible" Margin="5,5,5,5">
+        <!-- Col 3 -->
+        <Grid x:Name="EMapGrd" Grid.Column="2" Visibility="Visible" Margin="5,5,5,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25" />
                 <RowDefinition Height="25" />
@@ -34,34 +48,100 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Margin="5,0,0,0" Text="ID" />
+                   Margin="5,0,0,0" Text="Eng. Map ID" />
+            <TextBox x:Name="IdTB" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding MapID, Mode=TwoWay}"/>
+
             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Margin="5,0,0,0" Text="Title"  />
+                   Margin="5,0,0,0" Text="Eng. Map type"  />
+            <ComboBox x:Name="EMapTypeCB" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Width="150" Margin="5,0,0,0" >
+                <ComboBoxItem Content="Plan map"/>
+                <ComboBoxItem Content="Profile map"/>
+                <ComboBoxItem Content="3D map"/>
+            </ComboBox>
+            
             <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Margin="5,0,0,0" Text="Local data path"  />
-            <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Margin="5,0,0,0" Text="Local tile path"  />
-            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
-                   Margin="5,0,0,0" Text="Local database"  />
-            <TextBox x:Name="IdTB" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0" IsReadOnly="True"
-                     Text="{Binding ID}"/>
-            <TextBox x:Name="TitleTB" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0" 
-                     Text="{Binding ProjectTitle, Mode=TwoWay}"/>
+                   Margin="5,0,0,0" Text="Local tiled map"  />
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalPathTB" Width="490" VerticalAlignment="Center" IsReadOnly="True"
-                         Text="{Binding LocalFilePath, Mode=TwoWay}"/>
-                <Button x:Name="LocalPathBtn" Content="..." Width="25" HorizontalAlignment="Right" />
+                <TextBox x:Name="LocalTile1TB" Width="130"  VerticalAlignment="Center" IsReadOnly="True"
+                         Text="{Binding LocalTileFileName1}"/>
+                <Button x:Name="LocalTile1Btn" Content="..." Width="25" HorizontalAlignment="Right"
+                        Click="LocalTileBtn_Click"/>
             </StackPanel>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Local GeoDB file"  />
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalTileTB" Width="490" VerticalAlignment="Center" IsReadOnly="True"
-                         Text="{Binding LocalTilePath, Mode=TwoWay}"/>
-                <Button x:Name="LocalTileBtn" Content="..." Width="25" HorizontalAlignment="Right" />
+                <TextBox x:Name="LocalGeoDBTB" Width="130"  VerticalAlignment="Center" IsReadOnly="True"
+                         Text="{Binding LocalGeoDbFileName}"/>
+                <Button x:Name="LocalGeoDBBtn" Content="..." Width="25" HorizontalAlignment="Right"
+                        Click="LocalGeoDBBtn_Click"/>
             </StackPanel>
+
+            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="GeoDB Layers:"  />
+            <Button x:Name="LyrSetting" Grid.Row="4" Grid.Column="2" Content="Layer Setting..." 
+                    Width="100" HorizontalAlignment="Right"/>
+            <ListBox Grid.Row="5" Grid.ColumnSpan="2" x:Name="GeoDBLayrList" Margin="5,0,5,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox x:Name="LayrCB" Margin="2"
+                                  Content="{Binding Name}" IsChecked="{Binding Visibility}" Tag="{Binding LayerObject}"
+                                  Click="LayerCB_Click"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!--
+            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Local tile map#2"  />
             <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Margin="0,0,5,0">
-                <TextBox x:Name="LocalDbTB" Width="490"  VerticalAlignment="Center" IsReadOnly="True"
-                         Text="{Binding LocalDatabaseName, Mode=TwoWay}"/>
-                <Button x:Name="LocalDbBtn" Content="..." Width="25" HorizontalAlignment="Right" />
+                <TextBox x:Name="LocalTile2TB" Width="130"  VerticalAlignment="Center" IsReadOnly="True"
+                         Text="{Binding LocalTileFileName2}"/>
+                <Button x:Name="LocalTile2Btn" Content="..." Width="25" HorizontalAlignment="Right"
+                        Click="LocalTileBtn_Click"/>
             </StackPanel>
+
+            <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Local map file"  />
+            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1" Margin="0,0,5,0">
+                <TextBox x:Name="LocalMapFileTB" Width="130"  VerticalAlignment="Center" IsReadOnly="True"
+                         Text="{Binding LocalMapFileName}"/>
+                <Button x:Name="LocalMapFileBtn" Content="..." Width="25" HorizontalAlignment="Right"
+                        Click="LocalTileBtn_Click"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Min. Resolution"  />
+            <TextBox x:Name="MinRestTB" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding MinimumResolution, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Map rotation"  />
+            <TextBox x:Name="MapRotTB" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding MapRotation, Mode=TwoWay}"/>
+            
+            <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Scale"  />
+            <TextBox x:Name="ScaleTB" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding Scale, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Scale X"  />
+            <TextBox x:Name="ScaleXTB" Grid.Row="9" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding ScaleX, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Scale Y"  />
+            <TextBox x:Name="ScaleYTB" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding ScaleY, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                   Margin="5,0,0,0" Text="Scale Z"  />
+            <TextBox x:Name="ScaleZTB" Grid.Row="11" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"
+                     Text="{Binding ScaleZ, Mode=TwoWay}"/>
+            -->
         </Grid>
 
         <Grid x:Name="MapGrid" Grid.Column="1" Visibility="Hidden" Margin="5,5,5,5">
@@ -81,10 +161,10 @@
         </Grid>
 
         <!-- Row 2 -->
-        <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
+        <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="3"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
                    Text="" Foreground="Red" />
-        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1"
+        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="2"
                 Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>
     </Grid>
