@@ -29,6 +29,7 @@
 //**          .NET Framework 4.5
 //**          ArcGIS Runtime SDK for .NET 10.2.5
 //**          iS3.Core
+//**          Xceed.Wpf.Toolkit
 //
 
 using System;
@@ -111,7 +112,7 @@ namespace iS3.Config
 
             // Step 3.1 - Config project general definition
             //
-            ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(projID, dataPath);
+            ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(dataPath, projID);
             success = projGnrDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -127,6 +128,9 @@ namespace iS3.Config
             {
                 return false;
             }
+            ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
+            ConfigCore.WriteProjectDefinition(dataPath, projID, projDef);
+
 
             return true;
         }

@@ -29,7 +29,7 @@ namespace iS3.Config
 
         public ProjectDefinition ProjDef;
 
-        public ProjGnrDefWindow(string projID, string dataPath)
+        public ProjGnrDefWindow(string dataPath, string projID)
         {
             InitializeComponent();
 

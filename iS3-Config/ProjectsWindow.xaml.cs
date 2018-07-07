@@ -54,6 +54,10 @@ namespace iS3.Config
         public double ProjLocX = 0;
         public double ProjLocY = 0;
 
+        public ProjectList ProjectList {
+            get { return _projList; }
+        }
+
         string _projListFile;
         ProjectList _projList;
         GraphicsLayer _gLayer;
@@ -78,19 +82,6 @@ namespace iS3.Config
             }
         }
 
-        private async void InitializePictureMarkerSymbol()
-        {
-            try
-            {
-                await _pinMarkerSymbol.SetSourceAsync(
-                    new Uri("pack://application:,,,/IS3.Config;component/Images/pin_red.png"));
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
-
         private void MyMapView_Loaded(object sender, RoutedEventArgs e)
         {
             _gLayer = Map.Layers["ProjectGraphicsLayer"] as GraphicsLayer;
@@ -100,20 +91,6 @@ namespace iS3.Config
             {
                 AddProjectLocationOnMap(loc);
             }
-        }
-
-        void AddProjectLocationOnMap(ProjectLocation loc)
-        {
-            Graphic g = new Graphic()
-            {
-                Geometry = new MapPoint(loc.X, loc.Y),
-                Symbol = _pinMarkerSymbol,
-            };
-            g.Attributes["ID"] = loc.ID;
-            g.Attributes["DefinitionFile"] = loc.DefinitionFile;
-            g.Attributes["Description"] = loc.Description;
-
-            _gLayer.Graphics.Add(g);
         }
 
         private void ProjectListLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -189,7 +166,7 @@ namespace iS3.Config
             AddProjectLocationOnMap(loc);
         }
 
-        private void Add_Click(object sender, RoutedEventArgs e)
+        private void AddProject_Click(object sender, RoutedEventArgs e)
         {
             AddProjWindow addProjWnd = new AddProjWindow();
             addProjWnd.Owner = this;
@@ -209,7 +186,7 @@ namespace iS3.Config
             }
         }
 
-        private void Remove_Click(object sender, RoutedEventArgs e)
+        private void RemoveProject_Click(object sender, RoutedEventArgs e)
         {
             ProjectLocation loc = ProjectListLB.SelectedItem as ProjectLocation;
             if (loc == null)
@@ -233,11 +210,40 @@ namespace iS3.Config
             ProjID = loc.ID;
             ProjLocX = loc.X;
             ProjLocY = loc.Y;
-            ConfigCore.WriteProjectList(_projListFile, _projList);
             // finish 
             DialogResult = true;
             Close();
         }
 
+        // Load picture 'pin_red.png' to _pinMarkerSymbol
+        //
+        private async void InitializePictureMarkerSymbol()
+        {
+            try
+            {
+                await _pinMarkerSymbol.SetSourceAsync(
+                    new Uri("pack://application:,,,/IS3.Config;component/Images/pin_red.png"));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        // Add a pin marker to the map for the specfied project location
+        //
+        void AddProjectLocationOnMap(ProjectLocation loc)
+        {
+            Graphic g = new Graphic()
+            {
+                Geometry = new MapPoint(loc.X, loc.Y),
+                Symbol = _pinMarkerSymbol,
+            };
+            g.Attributes["ID"] = loc.ID;
+            g.Attributes["DefinitionFile"] = loc.DefinitionFile;
+            g.Attributes["Description"] = loc.Description;
+
+            _gLayer.Graphics.Add(g);
+        }
     }
 }

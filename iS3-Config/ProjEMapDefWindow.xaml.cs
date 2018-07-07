@@ -19,11 +19,17 @@ using Esri.ArcGISRuntime.Data;
 
 namespace iS3.Config
 {
+    // GdbLayer is used for UI binding and selection operations.
+    // The first three members are for UI binding.
+    // The last two members are for selection operations.
+    //
     public class GdbLayer
     {
         public string Name { get; set; }
         public bool Visibility { get; set; }
+        public GdbLayer LayerObject { get; set; }
         public GeodatabaseFeatureTable FeatureTable { get; set; }
+        public Esri.ArcGISRuntime.Geometry.Envelope Extent { get; set; }
     }
 
     /// <summary>
@@ -51,40 +57,8 @@ namespace iS3.Config
             if (firstEMap != null)
             {
                 EMapsLB.SelectedIndex = 0;
-                EMapChanged(firstEMap);
-            }
-        }
-
-        void EMapChanged(EngineeringMap emap)
-        {
-            // refresh UI
-            EMapGrd.DataContext = null;
-            EMapGrd.DataContext = emap;
-            if (emap.MapType == EngineeringMapType.FootPrintMap)
-                EMapTypeCB.SelectedIndex = 0;
-            else if (emap.MapType == EngineeringMapType.GeneralProfileMap)
-                EMapTypeCB.SelectedIndex = 1;
-            else if (emap.MapType == EngineeringMapType.Map3D)
-                EMapTypeCB.SelectedIndex = 2;
-        }
-
-        void LoadTiledLayer1(EngineeringMap emap)
-        {
-            ArcGISLocalTiledLayer tileLayr1 = Map.Layers["TiledLayer1"] as ArcGISLocalTiledLayer;
-            if (tileLayr1 != null)
-            {
-                Map.Layers.Remove(tileLayr1);
-            }
-
-            string file = ProjDef.LocalTilePath + "\\" + emap.LocalTileFileName1;
-            if (File.Exists(file))
-            {
-                ArcGISLocalTiledLayer newLayr = new ArcGISLocalTiledLayer(file);
-                newLayr.ID = "TiledLayer1";
-                newLayr.DisplayName = "TileLayer1";
-                Map.Layers.Add(newLayr);
-
-                MyMapView.SetView(newLayr.FullExtent);
+                // refresh UI
+                EMapGrd.DataContext = firstEMap;
             }
         }
 
@@ -94,13 +68,8 @@ namespace iS3.Config
             if (emap != null)
             {
                 LoadTiledLayer1(emap);
-                LoadGeoDb(emap);
+                ReloadGeoDb(emap);
             }
-        }
-
-        private void Next_Click(object sender, RoutedEventArgs e)
-        {
-            EngineeringMap map = ProjDef.EngineeringMaps.FirstOrDefault();
         }
 
         private void LocalTileBtn_Click(object sender, RoutedEventArgs e)
@@ -146,8 +115,9 @@ namespace iS3.Config
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
+                // Load new Local GeoDB layers
                 emap.LocalGeoDbFileName = dialog.SafeFileName;
-                LoadGeoDb(emap);
+                ReloadGeoDb(emap);
 
                 // refresh UI
                 EMapGrd.DataContext = null;
@@ -156,59 +126,205 @@ namespace iS3.Config
 
         }
 
-        async void LoadGeoDb(EngineeringMap emap)
+        private void LayerCB_Click(object sender, RoutedEventArgs e)
         {
+            System.Windows.Controls.CheckBox chkBox = sender as System.Windows.Controls.CheckBox;
+
+            // Click => Switch the layer on/off
+            GdbLayer gdbLyr = chkBox.Tag as GdbLayer;
+            Layer lyr = Map.Layers[gdbLyr.Name];
+            lyr.IsVisible = chkBox.IsChecked.Value;
+
+            // Update layer definition
+            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
+            if (emap == null)
+                return;
+            LayerDef lyrDef = emap.LocalGdbLayersDef.Find(x => x.Name == gdbLyr.Name);
+            if (lyrDef == null)
+                return;
+            lyrDef.IsVisible = chkBox.IsChecked.Value;
+        }
+
+        private void LayrCB_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            System.Windows.Controls.CheckBox chkBox = sender as System.Windows.Controls.CheckBox;
+
+            // Double click => Zoom to the layer
+            GdbLayer gdbLayer = chkBox.Tag as GdbLayer;
+            MyMapView.SetView(gdbLayer.Extent);
+        }
+
+        private void AddEMap_Click(object sender, RoutedEventArgs e)
+        {
+            // new emap
+            EngineeringMap emap = new EngineeringMap();
+            emap.MapID = "Map" + ProjDef.EngineeringMaps.Count.ToString();
+            emap.MapType = EngineeringMapType.FootPrintMap;
+
+            // update project definition
+            ProjDef.EngineeringMaps.Add(emap);
+
+            // refresh UI
+            EMapsLB.Items.Add(emap);
+            EMapsLB.SelectedItem = emap;
+            EMapGrd.DataContext = null;
+            EMapGrd.DataContext = emap;
+
+            // refresh map
+            ReloadMap(emap);
+        }
+
+        private void RemoveEMap_Click(object sender, RoutedEventArgs e)
+        {
+            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
+            if (emap == null)
+                return;
+
+            // Update project definition
+            ProjDef.EngineeringMaps.Remove(emap);
+
+            // Refresh UI
+            EMapsLB.Items.Remove(emap);
+            EMapGrd.DataContext = null;
+
+            // Refresh map
+            ReloadMap(null);
+        }
+
+        private void EMapsLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
+
+            // refresh UI
+            EMapGrd.DataContext = null;
+            EMapGrd.DataContext = emap;
+
+            // refresh map
+            ReloadMap(emap);
+        }
+
+        private async void LyrSetting_Click(object sender, RoutedEventArgs e)
+        {
+            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
+            if (emap == null)
+                return;
+
+            GdbLayer gdbLyr = GeoDBLayrLB.SelectedItem as GdbLayer;
+            if (gdbLyr == null)
+                return;
+
+            LayerDef lyrDef = emap.LocalGdbLayersDef.Find(x => x.Name == gdbLyr.Name);
+
+            LayerDefWindow lyrDefWnd = new LayerDefWindow(lyrDef);
+            lyrDefWnd.Owner = this;
+            lyrDefWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? success = lyrDefWnd.ShowDialog();
+            if (success != null && success.Value == true)
+            {
+                Layer lyr = Map.Layers[gdbLyr.Name];
+                if (lyr != null)
+                {
+                    // Reload the layer
+                    Map.Layers.Remove(lyr);
+                    await GdbHelper.addGeodatabaseLayer(Map, lyrDef, gdbLyr.FeatureTable);
+                }
+            }
+        }
+
+        private void Next_Click(object sender, RoutedEventArgs e)
+        {
+            // finish 
+            DialogResult = true;
+            Close();
+        }
+
+        // Load ArcGISLocalTiledLayer for the specified engineering map
+        //
+        void LoadTiledLayer1(EngineeringMap emap)
+        {
+            ArcGISLocalTiledLayer tileLayr1 = Map.Layers["TiledLayer1"] as ArcGISLocalTiledLayer;
+            if (tileLayr1 != null)
+            {
+                Map.Layers.Remove(tileLayr1);
+            }
+
+            string file = ProjDef.LocalTilePath + "\\" + emap.LocalTileFileName1;
+            if (File.Exists(file))
+            {
+                ArcGISLocalTiledLayer newLayr = new ArcGISLocalTiledLayer(file);
+                newLayr.ID = "TiledLayer1";
+                newLayr.DisplayName = "TileLayer1";
+                Map.Layers.Add(newLayr);
+
+                MyMapView.SetView(newLayr.FullExtent);
+            }
+        }
+
+        // Reload the specified engineering map, clear the map view at first.
+        //
+        void ReloadMap(EngineeringMap emap)
+        {
+            Map.Layers.Clear();
+            if (emap != null)
+            {
+                LoadTiledLayer1(emap);
+                ReloadGeoDb(emap);
+            }
+        }
+
+        // Load the specifiled emap's geodatabase, and add all the features layers to the map.
+        //
+        async void ReloadGeoDb(EngineeringMap emap)
+        {
+            // Clear existing Local GeoDB layers
+            if (GeoDBLayrLB.ItemsSource != null)
+            {
+                foreach (var item in GeoDBLayrLB.ItemsSource)
+                {
+                    GdbLayer lyr = item as GdbLayer;
+                    Layer mapLyr = Map.Layers[lyr.Name];
+                    if (mapLyr != null)
+                        Map.Layers.Remove(mapLyr);
+                }
+                GeoDBLayrLB.ItemsSource = null;
+            }
+
+            // Load new
             string file = ProjDef.LocalFilePath + "\\" + emap.LocalGeoDbFileName;
             if (File.Exists(file))
             {
+                // Open geodatabase
                 Geodatabase gdb = await Geodatabase.OpenAsync(file);
                 IEnumerable<GeodatabaseFeatureTable> featureTables =
                     gdb.FeatureTables;
                 List<GdbLayer> gdbLayers = new List<GdbLayer>();
                 foreach (var table in featureTables)
                 {
+                    // GdbLayer is used for UI binding and selection operations.
                     GdbLayer layer = new GdbLayer();
                     layer.Name = table.Name;
-                    layer.Visibility = false;
+                    layer.Visibility = true;
+                    layer.LayerObject = layer;
                     layer.FeatureTable = table;
+                    layer.Extent = table.Extent;
                     gdbLayers.Add(layer);
 
+                    // Search LayerDef, use default if not found.
                     LayerDef lyrDef = emap.LocalGdbLayersDef.Find(x => x.Name == table.Name);
                     if (lyrDef == null)
                     {
                         lyrDef = GdbHelper.GenerateDefaultLayerDef(table);
                         emap.LocalGdbLayersDef.Add(lyrDef);
                     }
+
+                    // Add the feature layer to the map
                     await GdbHelper.addGeodatabaseLayer(Map, lyrDef, table);
                 }
 
-                GeoDBLayrList.ItemsSource = gdbLayers;
+                // Refresh UI
+                GeoDBLayrLB.ItemsSource = gdbLayers;
             }
         }
 
-        private void LayerCB_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.CheckBox chkBox = sender as System.Windows.Controls.CheckBox;
-
-            if (chkBox.IsChecked.Value)
-            { }
-        }
-
-        private void Add_Click(object sender, RoutedEventArgs e)
-        {
-            EngineeringMap emap = new EngineeringMap();
-            emap.MapID = "Map" + ProjDef.EngineeringMaps.Count.ToString();
-            emap.MapType = EngineeringMapType.FootPrintMap;
-
-            ProjDef.EngineeringMaps.Add(emap);
-            EMapsLB.Items.Add(emap);
-            EMapsLB.SelectedItem = emap;
-            EMapChanged(emap);
-        }
-
-        private void Remove_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

@@ -43,7 +43,7 @@
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
@@ -63,8 +63,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Orientation="Horizontal">
-                <Button Content="+" Width="25" Margin="5,0,5,0" Click="Add_Click"/>
-                <Button Content="-" Width="25" Margin="5,0,5,0" Click="Remove_Click"/>
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="AddProject_Click"/>
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveProject_Click"/>
             </StackPanel>
             <TextBlock Text="Configuration:" />
             <ListBox x:Name="StepLB" Height="170"
@@ -97,7 +97,7 @@
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
                    Text="Select project from the list" Foreground="Red" />
-        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1"
+        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0"
                 Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>
     </Grid>

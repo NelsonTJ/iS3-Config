@@ -9,7 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
@@ -69,7 +69,7 @@
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
                    Text="" Foreground="Red" />
-        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1"
+        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="1" Margin="0,0,10,0"
                 Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>
 

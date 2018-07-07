@@ -4,13 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
+        xmlns:iS3Core="clr-namespace:IS3.Core;assembly=IS3.Core"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Project Engineering Map Definition" Height="450" Width="800">
+        Title="Engineering map definition" Height="450" Width="800">
     <Grid>
+        <Grid.Resources>
+            <ObjectDataProvider x:Key="enumEngMapTypeValues"
+                                MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="iS3Core:EngineeringMapType"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
@@ -23,7 +33,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
-            <ListBox x:Name="EMapsLB" Margin="5,0,5,0">
+            <ListBox x:Name="EMapsLB" Margin="5,0,5,0" SelectionChanged="EMapsLB_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding MapID}"/>
@@ -31,10 +41,9 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
-                <Button Content="+" Width="25" Margin="5,0,5,0" Click="Add_Click"/>
-                <Button Content="-" Width="25" Margin="5,0,5,0" Click="Remove_Click"/>
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="AddEMap_Click"/>
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveEMap_Click"/>
             </StackPanel>
-
         </Grid>
         
         <!-- Col 2 -->
@@ -65,13 +74,10 @@
 
             <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Eng. Map type"  />
-            <ComboBox x:Name="EMapTypeCB" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
-                      Width="150" Margin="5,0,0,0" >
-                <ComboBoxItem Content="Plan map"/>
-                <ComboBoxItem Content="Profile map"/>
-                <ComboBoxItem Content="3D map"/>
-            </ComboBox>
-            
+            <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Width="150" Margin="5,0,0,0" SelectedValue="{Binding MapType}"
+                      ItemsSource="{Binding Source={StaticResource enumEngMapTypeValues}}"/>
+
             <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Local tiled map"  />
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0,0,5,0">
@@ -93,13 +99,13 @@
             <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="GeoDB Layers:"  />
             <Button x:Name="LyrSetting" Grid.Row="4" Grid.Column="2" Content="Layer Setting..." 
-                    Width="100" HorizontalAlignment="Right"/>
-            <ListBox Grid.Row="5" Grid.ColumnSpan="2" x:Name="GeoDBLayrList" Margin="5,0,5,0">
+                    Width="100" HorizontalAlignment="Right" Click="LyrSetting_Click"/>
+            <ListBox Grid.Row="5" Grid.ColumnSpan="2" x:Name="GeoDBLayrLB" Margin="5,0,5,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <CheckBox x:Name="LayrCB" Margin="2"
                                   Content="{Binding Name}" IsChecked="{Binding Visibility}" Tag="{Binding LayerObject}"
-                                  Click="LayerCB_Click"/>
+                                  Click="LayerCB_Click" MouseDoubleClick="LayrCB_MouseDoubleClick" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -175,7 +181,7 @@
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="3"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
                    Text="" Foreground="Red" />
-        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="2"
+        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="2" Margin="0,0,10,0"
                 Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>
     </Grid>

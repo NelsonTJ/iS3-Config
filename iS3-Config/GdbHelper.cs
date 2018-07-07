@@ -202,12 +202,12 @@ namespace iS3.Config
             return labelClass;
         }
 
-        public static LayerDef GenerateDefaultLayerDef(GeodatabaseFeatureTable table)
+        public static LayerDef GenerateDefaultLayerDef(string name, IS3.Core.Geometry.GeometryType geomType)
         {
             LayerDef lyrDef = new LayerDef();
-            lyrDef.Name = table.Name;
+            lyrDef.Name = name;
             lyrDef.IsVisible = true;
-            if (table.GeometryType == GeometryType.Point)
+            if (geomType == IS3.Core.Geometry.GeometryType.Point)
             {
                 lyrDef.GeometryType = IS3.Core.Geometry.GeometryType.Point;
                 lyrDef.Color = Colors.Red;
@@ -215,14 +215,14 @@ namespace iS3.Config
                 lyrDef.EnableLabel = true;
                 lyrDef.LabelTextExpression = "[Name]";
             }
-            else if (table.GeometryType == GeometryType.Polyline)
+            else if (geomType == IS3.Core.Geometry.GeometryType.Polyline)
             {
                 lyrDef.GeometryType = IS3.Core.Geometry.GeometryType.Polyline;
                 lyrDef.OutlineColor = Colors.Green;
                 lyrDef.Color = Colors.Green;
                 lyrDef.FillStyle = SimpleFillStyle.Solid;
             }
-            else if (table.GeometryType == GeometryType.Polygon)
+            else if (geomType == IS3.Core.Geometry.GeometryType.Polygon)
             {
                 lyrDef.GeometryType = IS3.Core.Geometry.GeometryType.Polygon;
                 lyrDef.OutlineColor = Colors.Blue;
@@ -231,6 +231,24 @@ namespace iS3.Config
             }
 
             return lyrDef;
+        }
+
+        public static LayerDef GenerateDefaultLayerDef(GeodatabaseFeatureTable table)
+        {
+            IS3.Core.Geometry.GeometryType geomType = IS3.Core.Geometry.GeometryType.Point;
+            if (table.GeometryType == GeometryType.Point)
+            {
+                geomType = IS3.Core.Geometry.GeometryType.Point;
+            }
+            else if (table.GeometryType == GeometryType.Polyline)
+            {
+                geomType = IS3.Core.Geometry.GeometryType.Polyline;
+            }
+            else if (table.GeometryType == GeometryType.Polygon)
+            {
+                geomType = IS3.Core.Geometry.GeometryType.Polygon;
+            }
+            return GenerateDefaultLayerDef(table.Name, geomType);
         }
 
     }

@@ -58,6 +58,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\..\Output\libs\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -84,6 +87,10 @@
       <DependentUpon>ConfPathWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="LayerDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProjEMapDefWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GdbHelper.cs" />
+    <Compile Include="LayerDefWindow.xaml.cs">
+      <DependentUpon>LayerDefWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjEMapDefWindow.xaml.cs">
       <DependentUpon>ProjEMapDefWindow.xaml</DependentUpon>
     </Compile>
