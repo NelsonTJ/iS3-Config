@@ -193,5 +193,22 @@ namespace iS3.Config
             if (chkBox.IsChecked.Value)
             { }
         }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            EngineeringMap emap = new EngineeringMap();
+            emap.MapID = "Map" + ProjDef.EngineeringMaps.Count.ToString();
+            emap.MapType = EngineeringMapType.FootPrintMap;
+
+            ProjDef.EngineeringMaps.Add(emap);
+            EMapsLB.Items.Add(emap);
+            EMapsLB.SelectedItem = emap;
+            EMapChanged(emap);
+        }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

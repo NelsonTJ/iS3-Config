@@ -111,6 +111,7 @@ namespace iS3.Config
             gLayer.DisplayName = table.Name;
             gLayer.GraphicsSource = graphics;
             gLayer.geometryType = (IS3.Core.Geometry.GeometryType)(int)table.GeometryType;
+            //gLayer.FullExtent = table.Extent;
 
             return gLayer;
         }

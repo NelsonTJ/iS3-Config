@@ -63,8 +63,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Add..." Margin="5,0,5,0" Click="Add_Click"/>
-                <Button Content="Remove" Margin="5,0,5,0" Click="Remove_Click"/>
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="Add_Click"/>
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="Remove_Click"/>
             </StackPanel>
             <TextBlock Text="Configuration:" />
             <ListBox x:Name="StepLB" Height="170"

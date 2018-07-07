@@ -14,17 +14,28 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="400" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition MinWidth="400" Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <!-- Col 1 -->
-        <ListBox x:Name="EMapsLB" Margin="5,0,5,0">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding MapID}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <ListBox x:Name="EMapsLB" Margin="5,0,5,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding MapID}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="Add_Click"/>
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="Remove_Click"/>
+            </StackPanel>
+
+        </Grid>
         
         <!-- Col 2 -->
         <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
