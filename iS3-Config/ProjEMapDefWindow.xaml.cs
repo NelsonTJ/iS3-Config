@@ -48,10 +48,9 @@ namespace iS3.Config
                 EMapsLB.Items.Add(emap);
 
             MyMapView.Loaded += MyMapView_Loaded;
-            Loaded += ProjEMapDefWindow_Loaded;
         }
 
-        private void ProjEMapDefWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MyMapView_Loaded(object sender, RoutedEventArgs e)
         {
             EngineeringMap firstEMap = ProjDef.EngineeringMaps.FirstOrDefault();
             if (firstEMap != null)
@@ -59,16 +58,6 @@ namespace iS3.Config
                 EMapsLB.SelectedIndex = 0;
                 // refresh UI
                 EMapGrd.DataContext = firstEMap;
-            }
-        }
-
-        private void MyMapView_Loaded(object sender, RoutedEventArgs e)
-        {
-            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
-            if (emap != null)
-            {
-                LoadTiledLayer1(emap);
-                ReloadGeoDb(emap);
             }
         }
 
@@ -98,7 +87,7 @@ namespace iS3.Config
             }
         }
 
-        private void LocalGeoDBBtn_Click(object sender, RoutedEventArgs e)
+        private async void LocalGeoDBBtn_Click(object sender, RoutedEventArgs e)
         {
             EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
             if (emap == null)
@@ -117,7 +106,7 @@ namespace iS3.Config
             {
                 // Load new Local GeoDB layers
                 emap.LocalGeoDbFileName = dialog.SafeFileName;
-                ReloadGeoDb(emap);
+                await ReloadGeoDb(emap);
 
                 // refresh UI
                 EMapGrd.DataContext = null;
@@ -154,7 +143,7 @@ namespace iS3.Config
             MyMapView.SetView(gdbLayer.Extent);
         }
 
-        private void AddEMap_Click(object sender, RoutedEventArgs e)
+        private async void AddEMap_Click(object sender, RoutedEventArgs e)
         {
             // new emap
             EngineeringMap emap = new EngineeringMap();
@@ -171,10 +160,10 @@ namespace iS3.Config
             EMapGrd.DataContext = emap;
 
             // refresh map
-            ReloadMap(emap);
+            await ReloadMap(emap);
         }
 
-        private void RemoveEMap_Click(object sender, RoutedEventArgs e)
+        private async void RemoveEMap_Click(object sender, RoutedEventArgs e)
         {
             EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
             if (emap == null)
@@ -188,10 +177,10 @@ namespace iS3.Config
             EMapGrd.DataContext = null;
 
             // Refresh map
-            ReloadMap(null);
+            await ReloadMap(null);
         }
 
-        private void EMapsLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void EMapsLB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
 
@@ -200,7 +189,7 @@ namespace iS3.Config
             EMapGrd.DataContext = emap;
 
             // refresh map
-            ReloadMap(emap);
+            await ReloadMap(emap);
         }
 
         private async void LyrSetting_Click(object sender, RoutedEventArgs e)
@@ -256,25 +245,28 @@ namespace iS3.Config
                 newLayr.DisplayName = "TileLayer1";
                 Map.Layers.Add(newLayr);
 
-                MyMapView.SetView(newLayr.FullExtent);
+                if (newLayr.FullExtent != null)
+                {
+                    MyMapView.SetView(newLayr.FullExtent);
+                }
             }
         }
 
         // Reload the specified engineering map, clear the map view at first.
         //
-        void ReloadMap(EngineeringMap emap)
+        async Task ReloadMap(EngineeringMap emap)
         {
             Map.Layers.Clear();
             if (emap != null)
             {
                 LoadTiledLayer1(emap);
-                ReloadGeoDb(emap);
+                await ReloadGeoDb(emap);
             }
         }
 
         // Load the specifiled emap's geodatabase, and add all the features layers to the map.
         //
-        async void ReloadGeoDb(EngineeringMap emap)
+        async Task ReloadGeoDb(EngineeringMap emap)
         {
             // Clear existing Local GeoDB layers
             if (GeoDBLayrLB.ItemsSource != null)

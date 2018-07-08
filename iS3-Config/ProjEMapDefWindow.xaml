@@ -11,6 +11,9 @@
         Title="Engineering map definition" Height="450" Width="800">
     <Grid>
         <Grid.Resources>
+            <esri:ViewpointExtent x:Key="China"
+                                  XMin="8000000" XMax="15000000"
+                                  YMin="1400000" YMax="6400000" />
             <ObjectDataProvider x:Key="enumEngMapTypeValues"
                                 MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
@@ -48,7 +51,7 @@
         
         <!-- Col 2 -->
         <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
-            <esri:Map x:Name="Map">
+            <esri:Map x:Name="Map" >
             </esri:Map>
         </esri:MapView>
 
