@@ -58,24 +58,19 @@ namespace iS3.Config
             get { return _projList; }
         }
 
-        string _projListFile;
         ProjectList _projList;
         GraphicsLayer _gLayer;
         PictureMarkerSymbol _pinMarkerSymbol = new PictureMarkerSymbol();
 
-        public ProjectsWindow(string projListFile)
+        public ProjectsWindow(ProjectList projList)
         {
             InitializeComponent();
-
-            _projListFile = projListFile;
+            _projList = projList;
 
             InitializePictureMarkerSymbol();
             MyMapView.Loaded += MyMapView_Loaded;
             MyMapView.MouseDown += MyMapView_MouseDown;
 
-            _projList = ConfigCore.LoadProjectList(_projListFile);
-            if (_projList == null)
-                return;
             foreach (ProjectLocation loc in _projList.Locations)
             {
                 ProjectListLB.Items.Add(loc);

@@ -65,6 +65,12 @@ namespace iS3.Config
         {
             GdbHelper.Initialize();
 
+            // Load resources from ResourceDictionary.xaml
+            //
+            ResourceDictionary dict = (ResourceDictionary)Application.LoadComponent(
+                new Uri("/IS3.Config;Component/ResourceDictionary.xaml", System.UriKind.Relative));
+            this.Resources.MergedDictionaries.Add(dict);
+
             // open a background window that start the configuration
             Window backgroundWnd = new Window();
             this.MainWindow = backgroundWnd;
@@ -100,7 +106,8 @@ namespace iS3.Config
             // Step 2 - Config projects
             //
             string projListFile = dataPath + "\\ProjectList.xml";
-            ProjectsWindow projsWnd = new ProjectsWindow(projListFile);
+            ProjectList projList = ConfigCore.LoadProjectList(projListFile);
+            ProjectsWindow projsWnd = new ProjectsWindow(projList);
             success = projsWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -112,15 +119,17 @@ namespace iS3.Config
 
             // Step 3.1 - Config project general definition
             //
-            ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(dataPath, projID);
+            ProjectDefinition projDef = ConfigCore.LoadProjectDefinition(dataPath, projID);
+            if (projDef == null)
+                projDef = ConfigCore.CreateProjectDefinition(dataPath, projID);
+            ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(projDef);
             success = projGnrDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;
             }
-            ProjectDefinition projDef = projGnrDefWnd.ProjDef;
 
-            // Step 3.2 - Config project engineering maps definition
+            // Step 3.2 - Config engineering maps definition of the project
             //
             ProjEMapDefWindow projEMapsDefWnd = new ProjEMapDefWindow(projDef);
             success = projEMapsDefWnd.ShowDialog();
@@ -128,8 +137,23 @@ namespace iS3.Config
             {
                 return false;
             }
-            ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
-            ConfigCore.WriteProjectDefinition(dataPath, projID, projDef);
+
+            // Step 4 - Config domains of the project
+            //
+            List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
+
+            Project prj = ConfigCore.LoadProject(dataPath, projID);
+            DomainDefWindow domainDefWnd = new DomainDefWindow(prj, eMapLayersList);
+            success = domainDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
+
+
+            //
+            //ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
+            //ConfigCore.WriteProjectDefinition(dataPath, projID, projDef);
 
 
             return true;

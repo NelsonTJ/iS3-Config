@@ -14,32 +14,6 @@
             <esri:ViewpointExtent x:Key="China"
                                   XMin="8000000" XMax="15000000"
                                   YMin="1400000" YMax="6400000" />
-            <Style x:Key="ListBoxStyle" TargetType="ListBoxItem">
-                <!-- Set control template -->
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListBoxItem">
-                            <Border Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                 TextBlock.Foreground="{TemplateBinding Foreground}"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-
-                <!-- Set triggers -->
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="true">
-                        <Setter Property="Background" Value="Blue"/>
-                        <Setter Property="Foreground" Value="White"/>
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="true">
-                        <Setter Property="Background" Value="LightGreen"/>
-                        <Setter Property="Foreground" Value="Red"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -54,7 +28,7 @@
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Available projects:" />
             <ListBox x:Name="ProjectListLB" Height="200"
-                     ItemContainerStyle="{StaticResource ListBoxStyle}"
+                     ItemContainerStyle="{StaticResource MyListBoxStyle}"
                      SelectionChanged="ProjectListLB_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -68,29 +42,23 @@
             </StackPanel>
             <TextBlock Text="Configuration:" />
             <ListBox x:Name="StepLB" Height="170"
-                     ItemContainerStyle="{StaticResource ListBoxStyle}"
+                     ItemContainerStyle="{StaticResource MyListBoxStyle}"
                      SelectionChanged="StepLB_SelectionChanged">
                 <ListBoxItem Content="Description"/>
                 <ListBoxItem Content="Location"/>
             </ListBox>
         </StackPanel>
         <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
-            <esri:Map x:Name="Map"
-                      InitialViewpoint="{StaticResource China}">
-                <esri:ArcGISLocalTiledLayer ID="BaseMap"
-                                            Path="Data\TPKs\Topographic.tpk"/>
-                <esri:GraphicsLayer x:Name="ProjectGraphicsLayer"
-                    ID="ProjectGraphicsLayer">
-                </esri:GraphicsLayer>
+            <esri:Map x:Name="Map" InitialViewpoint="{StaticResource China}">
+                <esri:ArcGISLocalTiledLayer ID="BaseMap" Path="Data\TPKs\Topographic.tpk"/>
+                <esri:GraphicsLayer x:Name="ProjectGraphicsLayer" ID="ProjectGraphicsLayer"/>
             </esri:Map>
         </esri:MapView>
         <TextBox x:Name="ProjectDescTB" Grid.Column="1"
             Text="Project title"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
             Margin="10,40,0,0" Visibility="Hidden"
-            TextChanged="ProjectTitleTB_TextChanged"
-            IsReadOnly="True"
+            TextChanged="ProjectTitleTB_TextChanged" IsReadOnly="True"
             Height="35" FontSize="24" Foreground="Red" Background="Yellow"/>
 
         <!-- Row 2 -->

@@ -32,18 +32,33 @@ namespace iS3.Config
         public Esri.ArcGISRuntime.Geometry.Envelope Extent { get; set; }
     }
 
+    // EMapLayers is a helper class which is used for later 2D layer selection
+    // of the DObjectsDefinition class.
+    //
+    public class EMapLayers
+    {
+        public string EMapName { get; set; }
+        public List<string> EMapLayerNameList { get; set; }
+
+        public EMapLayers()
+        {
+            EMapLayerNameList = new List<string>();
+        }
+    }
+
     /// <summary>
     /// Interaction logic for ProjEMapDefWindow.xaml
     /// </summary>
     public partial class ProjEMapDefWindow : Window
     {
-        ProjectDefinition ProjDef;
+        public List<EMapLayers> EMapLayersList { get; set; }
+        ProjectDefinition _projDef;
 
         public ProjEMapDefWindow(ProjectDefinition projDef)
         {
             InitializeComponent();
 
-            ProjDef = projDef;
+            _projDef = projDef;
             foreach (EngineeringMap emap in projDef.EngineeringMaps)
                 EMapsLB.Items.Add(emap);
 
@@ -52,7 +67,7 @@ namespace iS3.Config
 
         private void MyMapView_Loaded(object sender, RoutedEventArgs e)
         {
-            EngineeringMap firstEMap = ProjDef.EngineeringMaps.FirstOrDefault();
+            EngineeringMap firstEMap = _projDef.EngineeringMaps.FirstOrDefault();
             if (firstEMap != null)
             {
                 EMapsLB.SelectedIndex = 0;
@@ -68,7 +83,7 @@ namespace iS3.Config
                 return;
 
             string file = emap.LocalTileFileName1;
-            string path = ProjDef.LocalTilePath;
+            string path = _projDef.LocalTilePath;
 
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.InitialDirectory = path;
@@ -94,7 +109,7 @@ namespace iS3.Config
                 return;
 
             string file = emap.LocalTileFileName1;
-            string path = ProjDef.LocalFilePath;
+            string path = _projDef.LocalFilePath;
 
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.InitialDirectory = path;
@@ -147,11 +162,11 @@ namespace iS3.Config
         {
             // new emap
             EngineeringMap emap = new EngineeringMap();
-            emap.MapID = "Map" + ProjDef.EngineeringMaps.Count.ToString();
+            emap.MapID = "Map" + _projDef.EngineeringMaps.Count.ToString();
             emap.MapType = EngineeringMapType.FootPrintMap;
 
             // update project definition
-            ProjDef.EngineeringMaps.Add(emap);
+            _projDef.EngineeringMaps.Add(emap);
 
             // refresh UI
             EMapsLB.Items.Add(emap);
@@ -170,7 +185,7 @@ namespace iS3.Config
                 return;
 
             // Update project definition
-            ProjDef.EngineeringMaps.Remove(emap);
+            _projDef.EngineeringMaps.Remove(emap);
 
             // Refresh UI
             EMapsLB.Items.Remove(emap);
@@ -220,9 +235,31 @@ namespace iS3.Config
             }
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private async void Next_Click(object sender, RoutedEventArgs e)
         {
-            // finish 
+            EMapLayersList = new List<EMapLayers>();
+
+            foreach (EngineeringMap emap in _projDef.EngineeringMaps)
+            {
+                string file = _projDef.LocalFilePath + "\\" + emap.LocalGeoDbFileName;
+                if (File.Exists(file))
+                {
+                    EMapLayers eMapLayers = new EMapLayers();
+                    eMapLayers.EMapName = emap.MapID;
+
+                    // Open geodatabase
+                    Geodatabase gdb = await Geodatabase.OpenAsync(file);
+                    IEnumerable<GeodatabaseFeatureTable> featureTables =
+                        gdb.FeatureTables;
+                    foreach (var table in featureTables)
+                    {
+                        eMapLayers.EMapLayerNameList.Add(table.Name);
+                    }
+
+                    EMapLayersList.Add(eMapLayers);
+                }
+            }
+                // finish 
             DialogResult = true;
             Close();
         }
@@ -237,7 +274,7 @@ namespace iS3.Config
                 Map.Layers.Remove(tileLayr1);
             }
 
-            string file = ProjDef.LocalTilePath + "\\" + emap.LocalTileFileName1;
+            string file = _projDef.LocalTilePath + "\\" + emap.LocalTileFileName1;
             if (File.Exists(file))
             {
                 ArcGISLocalTiledLayer newLayr = new ArcGISLocalTiledLayer(file);
@@ -282,7 +319,7 @@ namespace iS3.Config
             }
 
             // Load new
-            string file = ProjDef.LocalFilePath + "\\" + emap.LocalGeoDbFileName;
+            string file = _projDef.LocalFilePath + "\\" + emap.LocalGeoDbFileName;
             if (File.Exists(file))
             {
                 // Open geodatabase

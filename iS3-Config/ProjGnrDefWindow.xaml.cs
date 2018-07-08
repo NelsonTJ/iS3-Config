@@ -24,23 +24,21 @@ namespace iS3.Config
     /// </summary>
     public partial class ProjGnrDefWindow : Window
     {
-        string _projID = "";
-        string _dataPath = "";
+        public ProjectDefinition _projDef;
 
-        public ProjectDefinition ProjDef;
-
-        public ProjGnrDefWindow(string dataPath, string projID)
+        public ProjGnrDefWindow(ProjectDefinition projDef)
         {
             InitializeComponent();
 
-            _projID = projID;
-            _dataPath = dataPath;
+            _projDef = projDef;
 
-            ProjDef = ConfigCore.LoadProjectDefinition(_dataPath, _projID);
-            if (ProjDef == null)
-                ProjDef = ConfigCore.CreateProjectDefinition(_dataPath, _projID);
+            GeneralGrd.DataContext = _projDef;
+            Loaded += ProjGnrDefWindow_Loaded;
+        }
 
-            GeneralGrd.DataContext = ProjDef;
+        private void ProjGnrDefWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            ProjDefLB.SelectedIndex = 0;
         }
 
         private void PathBtn_Click(object sender, RoutedEventArgs e)
@@ -49,9 +47,9 @@ namespace iS3.Config
             System.Windows.Controls.Button btn = sender as System.Windows.Controls.Button;
 
             if (btn.Name == "LocalPathBtn")
-                path = ProjDef.LocalFilePath;
+                path = _projDef.LocalFilePath;
             else
-                path = ProjDef.LocalTilePath;
+                path = _projDef.LocalTilePath;
 
             if (!Directory.Exists(path))
             {
@@ -73,31 +71,31 @@ namespace iS3.Config
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 if (btn.Name == "LocalPathBtn")
-                    ProjDef.LocalFilePath = dialog.SelectedPath;
+                    _projDef.LocalFilePath = dialog.SelectedPath;
                 else
-                    ProjDef.LocalTilePath = dialog.SelectedPath;
+                    _projDef.LocalTilePath = dialog.SelectedPath;
                 
                 // refresh UI
                 GeneralGrd.DataContext = null;
-                GeneralGrd.DataContext = ProjDef;
+                GeneralGrd.DataContext = _projDef;
             }
         }
 
         private void LocalDbBtn_Click(object sender, RoutedEventArgs e)
         {
-            string file = ProjDef.LocalDatabaseName;
+            string file = _projDef.LocalDatabaseName;
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = ProjDef.LocalFilePath;
+            dialog.InitialDirectory = _projDef.LocalFilePath;
             dialog.FileName = file;
 
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                ProjDef.LocalDatabaseName = dialog.SafeFileName;
+                _projDef.LocalDatabaseName = dialog.SafeFileName;
 
                 // refresh UI
                 GeneralGrd.DataContext = null;
-                GeneralGrd.DataContext = ProjDef;
+                GeneralGrd.DataContext = _projDef;
             }
         }
 

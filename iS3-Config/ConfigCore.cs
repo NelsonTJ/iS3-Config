@@ -113,6 +113,8 @@ namespace iS3.Config
             return attrOverrides;
         }
 
+        // Load project definition from the specified file
+        //
         public static ProjectDefinition LoadProjectDefinition(string projPath, string projID)
         {
             string fileName = projPath + "\\" + projID + ".xml";
@@ -250,7 +252,6 @@ namespace iS3.Config
             return result;
         }
 
-
         // Write ProjectDefinition to the specfied file.
         //
         public static bool WriteProjectDefinition(string projPath, string projID, ProjectDefinition prjDef)
@@ -265,79 +266,46 @@ namespace iS3.Config
             writer.Write(strPrjDef);
             writer.Close();
 
-
             return false;
+        }
 
-/*
+        // Load Project [skeleton only!] from the specified file.
+        //
+        public static Project LoadProject(string projPath, string projID)
+        {
+            string fileName = projPath + "\\" + projID + ".xml";
+            if (!File.Exists(fileName))
+                return null;
+
+            Project proj = new Project();
             try
             {
-                // write xml to memory stream at first
-                Stream memStream = new MemoryStream();
-                XmlAttributeOverrides overide = CreateProjectDefinitionOverrides();  // overide some attributes
-                //XmlSerializer s = new XmlSerializer(typeof(ProjectDefinition), overide);
-                XmlSerializer s = new XmlSerializer(typeof(ProjectDefinition));
-                s.Serialize(memStream, prjDef);  // write to memory
+                StreamReader reader = new StreamReader(fileName);
+                XElement root = XElement.Load(reader);
 
-                // replace "Locations" with "ProjectList.Locations" so XamlReader would be happy.
-                memStream.Position = 0;
-                StreamReader reader = new StreamReader(memStream);
-                string xml = reader.ReadToEnd();
-                string xaml = xml.Replace("EngineeringMaps", "ProjectDefinition.EngineeringMaps");
+                if (root == null || root.Name != "Project")
+                    return null;
 
-                // overide ProjectList.xml
-                FileStream fs = new FileStream(fileName, FileMode.Create);
-                StreamWriter writer = new StreamWriter(fs);
-                writer.Write(xaml);
-                writer.Close();
-
-
-                return true;
+                // Load domain definition
+                IEnumerable<XElement> nodes = root.Elements("Domain");
+                foreach (XElement node in nodes)
+                {
+                    Domain domain = Domain.loadDefinition(node);
+                    if (domain == null)
+                        continue;
+                    domain.parent = proj;
+                    proj.domains.Add(domain.name, domain);
+                }
+                reader.Close();
             }
             catch (Exception error)
             {
                 MessageBox.Show(error.Message, "Error", MessageBoxButton.OK);
-                return false;
+                return null;
             }
-            */
+
+            return proj;
         }
 
-        static XmlAttributeOverrides CreateProjectDefinitionOverrides()
-        {
-            XmlAttributeOverrides attrOverrides = new XmlAttributeOverrides();
-
-            // add root element namespace
-            attrOverrides.Add(typeof(ProjectDefinition), new XmlAttributes()
-            {
-                XmlRoot = new XmlRootAttribute()
-                {
-                    ElementName = "ProjectDefinition",
-                    Namespace = "clr-namespace:IS3.Core;assembly=IS3.Core"
-                }
-            });
-
-            // write ProjectList member variables as attributes
-            attrOverrides.Add(typeof(ProjectDefinition), "ID", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("ID") });
-            attrOverrides.Add(typeof(ProjectDefinition), "ProjectTitle", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("ProjectTitle") });
-            attrOverrides.Add(typeof(ProjectDefinition), "DefaultMapID", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("DefaultMapID") });
-            attrOverrides.Add(typeof(ProjectDefinition), "LocalFilePath", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("LocalFilePath") });
-            attrOverrides.Add(typeof(ProjectDefinition), "LocalTilePath", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("LocalTilePath") });
-            attrOverrides.Add(typeof(ProjectDefinition), "LocalDatabaseName", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("LocalDatabaseName") });
-            attrOverrides.Add(typeof(ProjectDefinition), "DataServiceUrl", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("DataServiceUrl") });
-            attrOverrides.Add(typeof(ProjectDefinition), "GeometryServiceUrl", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("GeometryServiceUrl") });
-
-            // write ProjectLocation member variables as attributes
-            attrOverrides.Add(typeof(EngineeringMap), "MapType", new XmlAttributes()
-            { XmlAttribute = new XmlAttributeAttribute("MapType") });
-
-            return attrOverrides;
-        }
     }
 }
