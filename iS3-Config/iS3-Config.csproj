@@ -82,6 +82,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddDObjWindow.xaml.cs">
+      <DependentUpon>AddDObjWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AddDomainWindow.xaml.cs">
+      <DependentUpon>AddDomainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DbHelper.cs" />
     <Compile Include="ObjectTypeHelper.cs" />
     <Compile Include="PreviewTableWindow.xaml.cs">
@@ -93,6 +99,14 @@
     <Compile Include="SelectTableNamesWindow.xaml.cs">
       <DependentUpon>SelectTableNamesWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddDObjWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AddDomainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AddProjWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

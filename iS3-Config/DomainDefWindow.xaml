@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
         
         <!-- Row 1 -->
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="5,5,5,5">
             <TextBlock Text="Domains:" />
             <ListBox x:Name="DomainListLB" Height="120"
                      SelectionChanged="DomainListLB_SelectionChanged"
@@ -30,11 +30,11 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Orientation="Horizontal">
-                <Button Content="+" Width="25" Margin="5,0,5,0" />
-                <Button Content="-" Width="25" Margin="5,0,5,0" />
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="AddDomain_Click" />
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveDomain_Click" />
             </StackPanel>
             <TextBlock Text="Digital objects:" />
-            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="190"
+            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="180"
                      SelectionChanged="DObjsLB_SelectionChanged"
                      ItemContainerStyle="{StaticResource MyListBoxStyle}">
                 <ListBox.ItemTemplate>
@@ -44,8 +44,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel Orientation="Horizontal">
-                <Button Content="+" Width="25" Margin="5,0,5,0" />
-                <Button Content="-" Width="25" Margin="5,0,5,0" />
+                <Button Content="+" Width="25" Margin="5,0,5,0" Click="AddDObj_Click" />
+                <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveDObj_Click" />
             </StackPanel>
         </StackPanel>
 

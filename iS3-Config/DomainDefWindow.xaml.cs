@@ -51,6 +51,10 @@ namespace iS3.Config
             // Clear DObjsLB at first
             DObjsLB.ItemsSource = null;
 
+            // Check if this is triggered by clearing event
+            if (DomainListLB.SelectedItem == null)
+                return;
+
             KeyValuePair<string, Domain> item = (KeyValuePair<string, Domain>)DomainListLB.SelectedItem;
             Domain domain = _prj.domains[item.Key];
             Dictionary<string, DGObjectsDefinition> objsDef = domain.objsDefinitions;
@@ -77,6 +81,10 @@ namespace iS3.Config
 
         private void TableNameSQLBtn_Click(object sender, RoutedEventArgs e)
         {
+            DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+            if (DObjsDef == null)
+                return;
+
             string dbFile = _prjDef.LocalFilePath + "\\" + _prjDef.LocalDatabaseName;
             List<string> names = DbHelper.GetDbTablenames(dbFile);
 
@@ -87,7 +95,6 @@ namespace iS3.Config
             if (ok != null && ok.Value == true)
             {
                 TableNameTB.Text = selectTableNamesWnd.SelectedName;
-                DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
                 DObjsDef.TableNameSQL = selectTableNamesWnd.SelectedName;
             }
         }
@@ -95,6 +102,9 @@ namespace iS3.Config
         {
             string dbFile = _prjDef.LocalFilePath + "\\" + _prjDef.LocalDatabaseName;
             DGObjectsDefinition dObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+            if (dObjsDef == null)
+                return;
+
             DataSet dataSet = DbHelper.LoadTable(dbFile, 
                 dObjsDef.TableNameSQL, dObjsDef.ConditionSQL, dObjsDef.OrderSQL);
 
@@ -106,6 +116,10 @@ namespace iS3.Config
 
         private void TwoDimLayerBtn_Click(object sender, RoutedEventArgs e)
         {
+            DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+            if (DObjsDef == null)
+                return;
+
             SelectEMapLayersWindow selectEMapLayersWnd = new SelectEMapLayersWindow(_eMapLayersList);
             selectEMapLayersWnd.Owner = this;
             selectEMapLayersWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -115,7 +129,6 @@ namespace iS3.Config
                 if (selectEMapLayersWnd.SelectedLayerName != null)
                 {
                     LayerNameTB.Text = selectEMapLayersWnd.SelectedLayerName;
-                    DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
                     DObjsDef.GISLayerName = selectEMapLayersWnd.SelectedLayerName;
                 }
             }
@@ -126,12 +139,117 @@ namespace iS3.Config
 
         }
 
+        private void AddDomain_Click(object sender, RoutedEventArgs e)
+        {
+            AddDomainWindow addDomainWnd = new AddDomainWindow();
+            addDomainWnd.Owner = this;
+            addDomainWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? ok = addDomainWnd.ShowDialog();
+            if (ok != null && ok.Value == true)
+            {
+                Domain result = addDomainWnd.Result;
+                if (_prj.domains.Keys.Contains(result.name))
+                {
+                    MessageBox.Show("Domain already exist!", "Error", MessageBoxButton.OK);
+                }
+                else
+                {
+                    _prj.domains.Add(result.name, result);
+
+                    // force update UI
+                    int index = DomainListLB.SelectedIndex;
+                    DomainListLB.ItemsSource = null;
+                    DomainListLB.ItemsSource = _prj.domains;
+                    if (index != -1)
+                        DomainListLB.SelectedIndex = index;
+                    else
+                        DomainListLB.SelectedIndex = 0;
+                }
+            }
+        }
+
+        private void RemoveDomain_Click(object sender, RoutedEventArgs e)
+        {
+            int index = DomainListLB.SelectedIndex;
+            if (index == -1)
+                return;
+            KeyValuePair<string, Domain> item = (KeyValuePair<string, Domain>)DomainListLB.SelectedItem;
+
+            _prj.domains.Remove(item.Key);
+
+            // force update UI
+            DomainListLB.ItemsSource = null;
+            DomainListLB.ItemsSource = _prj.domains;
+
+            if (index > 0)
+                DomainListLB.SelectedIndex = index-1;
+            else if (index == 0)
+            {
+                if (DomainListLB.Items.Count > 0)
+                    DomainListLB.SelectedIndex = 0;
+            }
+        }
+
+        private void AddDObj_Click(object sender, RoutedEventArgs e)
+        {
+            // In case there is no domain, just return.
+            if (DomainListLB.Items.Count == 0)
+                return;
+
+            Dictionary<string, DGObjectsDefinition> objsDefinitions =
+                DObjsLB.ItemsSource as Dictionary<string, DGObjectsDefinition>;
+            AddDObjWindow addDObjWnd = new AddDObjWindow(objsDefinitions);
+            addDObjWnd.Owner = this;
+            addDObjWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? ok = addDObjWnd.ShowDialog();
+            if (ok != null && ok.Value == true)
+            {
+                string name = addDObjWnd.DObjName;
+                DGObjectsDefinition dObjDef = new DGObjectsDefinition();
+                dObjDef.Name = name;
+                objsDefinitions.Add(name, dObjDef);
+
+                // force update UI
+                int index = DObjsLB.SelectedIndex;
+                DObjsLB.ItemsSource = null;
+                DObjsLB.ItemsSource = objsDefinitions;
+                if (index != -1)
+                    DObjsLB.SelectedIndex = index;
+                else
+                    DObjsLB.SelectedIndex = 0;
+            }
+
+        }
+
+        private void RemoveDObj_Click(object sender, RoutedEventArgs e)
+        {
+            int index = DObjsLB.SelectedIndex;
+            if (index == -1)
+                return;
+            KeyValuePair<string, DGObjectsDefinition> item = 
+                (KeyValuePair<string, DGObjectsDefinition>)DObjsLB.SelectedItem;
+
+            Dictionary<string, DGObjectsDefinition> objsDefinitions=
+                DObjsLB.ItemsSource as Dictionary<string, DGObjectsDefinition>;
+            objsDefinitions.Remove(item.Key);
+
+            // force update UI
+            DObjsLB.ItemsSource = null;
+            DObjsLB.ItemsSource = objsDefinitions;
+            if (index > 0)
+                DObjsLB.SelectedIndex = index - 1;
+            else if (index == 0)
+            {
+                if (DObjsLB.Items.Count > 0)
+                    DObjsLB.SelectedIndex = 0;
+            }
+        }
+
         private void Next_Click(object sender, RoutedEventArgs e)
         {
             // finish 
             DialogResult = true;
             Close();
         }
-
     }
 }
