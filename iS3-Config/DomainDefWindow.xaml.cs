@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data;
 using IS3.Core;
 
 namespace iS3.Config
@@ -20,13 +21,16 @@ namespace iS3.Config
     /// </summary>
     public partial class DomainDefWindow : Window
     {
+        ProjectDefinition _prjDef;
         Project _prj;
         List<EMapLayers> _eMapLayersList;
 
-        public DomainDefWindow(Project prj, List<EMapLayers> eMapLayersList)
+        public DomainDefWindow(ProjectDefinition prjDef, Project prj,
+            List<EMapLayers> eMapLayersList)
         {
             InitializeComponent();
 
+            _prjDef = prjDef;
             _prj = prj;
             _eMapLayersList = eMapLayersList;
             DomainListLB.ItemsSource = prj.domains;
@@ -73,32 +77,46 @@ namespace iS3.Config
 
         private void TableNameSQLBtn_Click(object sender, RoutedEventArgs e)
         {
+            string dbFile = _prjDef.LocalFilePath + "\\" + _prjDef.LocalDatabaseName;
+            List<string> names = DbHelper.GetDbTablenames(dbFile);
 
+            SelectTableNamesWindow selectTableNamesWnd = new SelectTableNamesWindow(names, TableNameTB.Text);
+            selectTableNamesWnd.Owner = this;
+            selectTableNamesWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? ok = selectTableNamesWnd.ShowDialog();
+            if (ok != null && ok.Value == true)
+            {
+                TableNameTB.Text = selectTableNamesWnd.SelectedName;
+                DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+                DObjsDef.TableNameSQL = selectTableNamesWnd.SelectedName;
+            }
         }
-
-        private void ConditionSQLBtn_Click(object sender, RoutedEventArgs e)
+        private void PreviewTableBtn_Click(object sender, RoutedEventArgs e)
         {
+            string dbFile = _prjDef.LocalFilePath + "\\" + _prjDef.LocalDatabaseName;
+            DGObjectsDefinition dObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+            DataSet dataSet = DbHelper.LoadTable(dbFile, 
+                dObjsDef.TableNameSQL, dObjsDef.ConditionSQL, dObjsDef.OrderSQL);
 
-        }
-
-        private void OrderSQL_Click(object sender, RoutedEventArgs e)
-        {
-
+            PreviewTableWindow previewTblWnd = new PreviewTableWindow(TableNameTB.Text, dataSet);
+            previewTblWnd.Owner = this;
+            previewTblWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            previewTblWnd.ShowDialog();
         }
 
         private void TwoDimLayerBtn_Click(object sender, RoutedEventArgs e)
         {
-            SelectEMapLayersWindow selectEMapLayersWindow = new SelectEMapLayersWindow(_eMapLayersList);
-            selectEMapLayersWindow.Owner = this;
-            selectEMapLayersWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            bool? ok = selectEMapLayersWindow.ShowDialog();
+            SelectEMapLayersWindow selectEMapLayersWnd = new SelectEMapLayersWindow(_eMapLayersList);
+            selectEMapLayersWnd.Owner = this;
+            selectEMapLayersWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? ok = selectEMapLayersWnd.ShowDialog();
             if (ok != null && ok.Value == true)
             {
-                if (selectEMapLayersWindow.SelectedLayerName != null)
+                if (selectEMapLayersWnd.SelectedLayerName != null)
                 {
-                    LayerNameTB.Text = selectEMapLayersWindow.SelectedLayerName;
+                    LayerNameTB.Text = selectEMapLayersWnd.SelectedLayerName;
                     DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
-                    DObjsDef.GISLayerName = selectEMapLayersWindow.SelectedLayerName;
+                    DObjsDef.GISLayerName = selectEMapLayersWnd.SelectedLayerName;
                 }
             }
         }
@@ -114,5 +132,6 @@ namespace iS3.Config
             DialogResult = true;
             Close();
         }
+
     }
 }

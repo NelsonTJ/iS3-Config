@@ -143,7 +143,7 @@ namespace iS3.Config
             List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
 
             Project prj = ConfigCore.LoadProject(dataPath, projID);
-            DomainDefWindow domainDefWnd = new DomainDefWindow(prj, eMapLayersList);
+            DomainDefWindow domainDefWnd = new DomainDefWindow(projDef, prj, eMapLayersList);
             success = domainDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
