@@ -95,6 +95,7 @@ namespace iS3.Config
             // Step 1 - Config path to iS3 and data directory
             //
             ConfPathWindow mainWnd = new ConfPathWindow();
+            mainWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = mainWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -108,6 +109,7 @@ namespace iS3.Config
             string projListFile = dataPath + "\\ProjectList.xml";
             ProjectList projList = ConfigCore.LoadProjectList(projListFile);
             ProjectsWindow projsWnd = new ProjectsWindow(projList);
+            projsWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projsWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -123,6 +125,7 @@ namespace iS3.Config
             if (projDef == null)
                 projDef = ConfigCore.CreateProjectDefinition(dataPath, projID);
             ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(projDef);
+            projGnrDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projGnrDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -132,6 +135,7 @@ namespace iS3.Config
             // Step 3.2 - Config engineering maps definition of the project
             //
             ProjEMapDefWindow projEMapsDefWnd = new ProjEMapDefWindow(projDef);
+            projEMapsDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projEMapsDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -141,15 +145,24 @@ namespace iS3.Config
             // Step 4 - Config domains of the project
             //
             List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
-
             Project prj = ConfigCore.LoadProject(dataPath, projID);
             DomainDefWindow domainDefWnd = new DomainDefWindow(projDef, prj, eMapLayersList);
+            domainDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = domainDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;
             }
 
+            // Step 5 - Config project tree
+            //
+            ProjTreeDefWindow prjTreeDefWnd = new ProjTreeDefWindow(prj);
+            prjTreeDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            success = prjTreeDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
 
             //
             //ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);

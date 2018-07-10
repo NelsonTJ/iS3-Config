@@ -5,15 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Domain definition" Height="450" Width="800">
+        Title="Domain definition" Height="450" Width="550">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="380" />
+            <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
@@ -34,7 +33,7 @@
                 <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveDomain_Click" />
             </StackPanel>
             <TextBlock Text="Digital objects:" />
-            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="180"
+            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="175"
                      SelectionChanged="DObjsLB_SelectionChanged"
                      ItemContainerStyle="{StaticResource MyListBoxStyle}">
                 <ListBox.ItemTemplate>

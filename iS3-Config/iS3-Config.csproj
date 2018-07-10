@@ -93,6 +93,9 @@
     <Compile Include="PreviewTableWindow.xaml.cs">
       <DependentUpon>PreviewTableWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjTreeDefWindow.xaml.cs">
+      <DependentUpon>ProjTreeDefWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectEMapLayersWindow.xaml.cs">
       <DependentUpon>SelectEMapLayersWindow.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProjectsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjTreeDefWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
