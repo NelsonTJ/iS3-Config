@@ -102,6 +102,9 @@
     <Compile Include="SelectTableNamesWindow.xaml.cs">
       <DependentUpon>SelectTableNamesWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TreeUserControl.xaml.cs">
+      <DependentUpon>TreeUserControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="AddDObjWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,6 +170,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectTableNamesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TreeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

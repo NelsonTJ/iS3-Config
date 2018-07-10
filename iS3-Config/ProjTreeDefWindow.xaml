@@ -5,46 +5,52 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Project tree definition" Height="450" Width="800">
+        Title="Project tree definition" Height="450" Width="550">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- Row 1 -->
-        <Grid>
+        <TabControl x:Name="TreeTabHolder" Grid.Column="0" Margin="5,5,5,5" TabStripPlacement="Bottom"
+                    SelectionChanged="TreeTabHolder_SelectionChanged">
+        </TabControl>
+
+        <Grid x:Name="TreeItemGrid" Margin="5,5,5,5" Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
-                <RowDefinition Height="150" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-            <TextBlock Text="Domains:" />
-            <ListBox x:Name="DomainListLB" Grid.Row="1" 
-                     SelectionChanged="DomainListLB_SelectionChanged"
-                     ItemContainerStyle="{StaticResource MyListBoxStyle}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=Key}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBlock Grid.Row="2" Text="Digital objects:" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="Display name:" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" Text="{Binding DisplayName}" />
+
+            <TextBlock Text="Domain:" Grid.Row="1" 
+                       HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RefDomainName}" />
+
+            <TextBlock Grid.Row="2" Text="Digital object:" Grid.ColumnSpan="2"
+                       HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <ListBox x:Name="DObjsLB" Grid.Row="3" Height="Auto" MinHeight="175"
+                     Grid.ColumnSpan="2"
                      SelectionChanged="DObjsLB_SelectionChanged"
+                     SelectedValue="{Binding RefObjsName}"
                      ItemContainerStyle="{StaticResource MyListBoxStyle}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=Key}"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
+
         
         <!-- Row 2 -->
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
