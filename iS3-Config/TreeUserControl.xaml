@@ -16,14 +16,20 @@
     </UserControl.Resources>
     <Grid>
         <TreeView x:Name="MyTreeView"
-                      ItemTemplate="{StaticResource TreeTemplate}"
-                      SelectedItemChanged="MyTreeView_SelectedItemChanged"
-                      >
+                  ItemTemplate="{StaticResource TreeTemplate}"
+                  SelectedItemChanged="MyTreeView_SelectedItemChanged"
+                  MouseRightButtonDown="MyTreeView_MouseRightButtonDown">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="True" />
                 </Style>
             </TreeView.ItemContainerStyle>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add" Click="AddMenuItem_Click" />
+                    <MenuItem Header="Remove" Click="RemoveMenuItem_Click" />
+                </ContextMenu>
+            </TreeView.ContextMenu>
         </TreeView>
     </Grid>
 </UserControl>

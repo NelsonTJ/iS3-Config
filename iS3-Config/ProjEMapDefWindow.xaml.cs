@@ -329,15 +329,6 @@ namespace iS3.Config
                 List<GdbLayer> gdbLayers = new List<GdbLayer>();
                 foreach (var table in featureTables)
                 {
-                    // GdbLayer is used for UI binding and selection operations.
-                    GdbLayer layer = new GdbLayer();
-                    layer.Name = table.Name;
-                    layer.Visibility = true;
-                    layer.LayerObject = layer;
-                    layer.FeatureTable = table;
-                    layer.Extent = table.Extent;
-                    gdbLayers.Add(layer);
-
                     // Search LayerDef, use default if not found.
                     LayerDef lyrDef = emap.LocalGdbLayersDef.Find(x => x.Name == table.Name);
                     if (lyrDef == null)
@@ -345,6 +336,16 @@ namespace iS3.Config
                         lyrDef = GdbHelper.GenerateDefaultLayerDef(table);
                         emap.LocalGdbLayersDef.Add(lyrDef);
                     }
+
+                    // GdbLayer is used for UI binding and selection operations.
+                    GdbLayer layer = new GdbLayer();
+                    layer.Name = table.Name;
+                    layer.Visibility = lyrDef.IsVisible;
+                    layer.LayerObject = layer;
+                    layer.FeatureTable = table;
+                    layer.Extent = table.Extent;
+                    gdbLayers.Add(layer);
+
 
                     // Add the feature layer to the map
                     await GdbHelper.addGeodatabaseLayer(Map, lyrDef, table);
@@ -355,5 +356,15 @@ namespace iS3.Config
             }
         }
 
+        private void MyMapView_ExtentChanged(object sender, EventArgs e)
+        {
+            EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
+            if (emap == null)
+                return;
+            emap.XMin = MyMapView.Extent.XMin;
+            emap.YMin = MyMapView.Extent.YMin;
+            emap.XMax = MyMapView.Extent.XMax;
+            emap.YMax = MyMapView.Extent.YMax;
+        }
     }
 }

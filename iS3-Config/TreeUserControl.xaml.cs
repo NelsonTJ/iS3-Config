@@ -30,12 +30,44 @@ namespace iS3.Config
         }
 
         public event EventHandler<object> OnTreeSelected;
+        public event EventHandler<object> OnTreeAdded;
+        public event EventHandler<object> OnTreeRemoved;
 
         private void MyTreeView_SelectedItemChanged(object sender,
             RoutedPropertyChangedEventArgs<object> e)
         {
             if (OnTreeSelected != null)
                 OnTreeSelected(this, e.NewValue);
+        }
+
+        private void MyTreeView_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // The sender is TreeView. 
+            // We need to get the TreeViewItem by search the parents of e.OriginalSource.
+            // 
+            DependencyObject source = e.OriginalSource as DependencyObject;
+            while (source != null && !(source is TreeViewItem))
+                source = VisualTreeHelper.GetParent(source);
+
+            TreeViewItem treeViewItem = source as TreeViewItem;
+
+            if (treeViewItem != null)
+            {
+                treeViewItem.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void AddMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (OnTreeAdded != null && MyTreeView.SelectedItem != null)
+                OnTreeAdded(this, MyTreeView.SelectedItem);
+        }
+
+        private void RemoveMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (OnTreeRemoved != null && MyTreeView.SelectedItem != null)
+                OnTreeRemoved(this, MyTreeView.SelectedItem);
         }
     }
 }

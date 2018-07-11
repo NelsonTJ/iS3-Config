@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Project tree definition" Height="450" Width="550">
+        Title="Project tree definition" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -26,6 +26,7 @@
                 <RowDefinition Height="25" />
                 <RowDefinition Height="25" />
                 <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
@@ -33,24 +34,23 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Text="Display name:" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" Text="{Binding DisplayName}" />
 
-            <TextBlock Text="Domain:" Grid.Row="1" 
+            <TextBlock Grid.Row="0" Text="Name:" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <ComboBox x:Name="NameCB" Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"
+                      IsEditable="True"/>
+
+            <TextBlock Grid.Row="1" Text="Display name:" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DisplayName, Mode=TwoWay}" />
+
+            <TextBlock Text="Domain:" Grid.Row="2" 
                        HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RefDomainName}" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RefDomainName}" IsReadOnly="True" />
 
-            <TextBlock Grid.Row="2" Text="Digital object:" Grid.ColumnSpan="2"
+            <TextBlock Grid.Row="3" Text="Digital object:" Grid.ColumnSpan="2"
                        HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <ListBox x:Name="DObjsLB" Grid.Row="3" Height="Auto" MinHeight="175"
-                     Grid.ColumnSpan="2"
-                     SelectionChanged="DObjsLB_SelectionChanged"
-                     SelectedValue="{Binding RefObjsName}"
-                     ItemContainerStyle="{StaticResource MyListBoxStyle}">
-            </ListBox>
+            <ComboBox x:Name="DObjsCB" Grid.Row="3" Grid.Column="1"
+                      SelectedValue="{Binding RefObjsName}" IsReadOnly="True" />
         </Grid>
-
         
         <!-- Row 2 -->
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"

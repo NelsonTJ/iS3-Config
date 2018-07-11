@@ -52,7 +52,8 @@
         </Grid>
         
         <!-- Col 2 -->
-        <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
+        <esri:MapView x:Name="MyMapView" ExtentChanged="MyMapView_ExtentChanged"
+                      WrapAround="True" Grid.Column="1">
             <esri:Map x:Name="Map" >
             </esri:Map>
         </esri:MapView>

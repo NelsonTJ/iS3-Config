@@ -164,10 +164,21 @@ namespace iS3.Config
                 return false;
             }
 
+            // Step 6 - Config 2d & 3d views
             //
-            //ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
-            //ConfigCore.WriteProjectDefinition(dataPath, projID, projDef);
 
+
+            // Write ProjectList.xml
+            //
+            ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
+            
+            // Write <projectID>.xml
+            //
+            ConfigCore.WriteProject(dataPath, projID, projDef, prj);
+
+            // Write <projectID>.py
+            //
+            ConfigCore.WriteViewsDef(iS3Path, projID, projDef);
 
             return true;
         }
