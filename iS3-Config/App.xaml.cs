@@ -25,11 +25,17 @@
 //**          ProjectList.xml
 //**          <ProjectName>.xml
 //**          <ProjectName>\*.*
-//** This program depends on the following library:
-//**          .NET Framework 4.5
-//**          ArcGIS Runtime SDK for .NET 10.2.5
-//**          iS3.Core
+//** This program depends on .NET Framework 4.5
+//
+//** This program depends on the following library (apart from .NET library):
 //**          Xceed.Wpf.Toolkit
+//**          iS3.Core
+//**          ArcGIS Runtime SDK for .NET 10.2.5
+//**          U3DPlayerAxLib
+//**          AxInterop.UnityWebPlayerAXLib
+//**          Interop.UnityWebPlayerAXLib
+//**          UnityCore
+//**          UnityEngine
 //
 
 using System;
@@ -92,7 +98,7 @@ namespace iS3.Config
         {
             bool? success;
 
-            // Step 1 - Config path to iS3 and data directory
+            // Preparation Step 1 - Config path to iS3 and data directory
             //
             ConfPathWindow mainWnd = new ConfPathWindow();
             mainWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -104,7 +110,7 @@ namespace iS3.Config
             iS3Path = mainWnd.ExePath;
             dataPath = mainWnd.DataPath;
 
-            // Step 2 - Config projects
+            // Preparation Step 2 - Config projects
             //
             string projListFile = dataPath + "\\ProjectList.xml";
             ProjectList projList = ConfigCore.LoadProjectList(projListFile);
@@ -119,7 +125,7 @@ namespace iS3.Config
             projLocX = projsWnd.ProjLocX;
             projLocY = projsWnd.ProjLocY;
 
-            // Step 3.1 - Config project general definition
+            // Step 1 - Config project general definition
             //
             ProjectDefinition projDef = ConfigCore.LoadProjectDefinition(dataPath, projID);
             if (projDef == null)
@@ -132,11 +138,21 @@ namespace iS3.Config
                 return false;
             }
 
-            // Step 3.2 - Config engineering maps definition of the project
+            // Step 2 - Config engineering maps definition of the project
             //
             ProjEMapDefWindow projEMapsDefWnd = new ProjEMapDefWindow(projDef);
             projEMapsDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projEMapsDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
+
+            // Step 3 - Config 3D map
+            //
+            Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            success = proj3DViewDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;

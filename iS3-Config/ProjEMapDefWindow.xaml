@@ -8,7 +8,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Engineering map definition" Height="450" Width="800">
+        Title="Step 2: 2D model config" Height="450" Width="800">
     <Grid>
         <Grid.Resources>
             <esri:ViewpointExtent x:Key="China"

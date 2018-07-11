@@ -48,9 +48,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AxInterop.UnityWebPlayerAXLib">
+      <HintPath>..\..\Output\libs\AxInterop.UnityWebPlayerAXLib.dll</HintPath>
+    </Reference>
     <Reference Include="Esri.ArcGISRuntime, Version=10.2.5.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Output\libs\arcgis\Esri.ArcGISRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.UnityWebPlayerAXLib">
+      <HintPath>..\..\Output\libs\Interop.UnityWebPlayerAXLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="IS3.ArcGIS">
       <HintPath>..\..\IS3-ArcGIS\obj\Debug\IS3.ArcGIS.dll</HintPath>
@@ -70,9 +77,19 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="U3DPlayerAxLib">
+      <HintPath>..\..\U3DPlayerAxLib\U3DPlayerAxLib\obj\Debug\U3DPlayerAxLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityCore">
+      <HintPath>..\..\Output\libs\UnityCore.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\Output\libs\UnityEngine.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xceed.Wpf.Toolkit">
       <HintPath>..\..\Output\libs\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
@@ -92,6 +109,9 @@
     <Compile Include="ObjectTypeHelper.cs" />
     <Compile Include="PreviewTableWindow.xaml.cs">
       <DependentUpon>PreviewTableWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Proj3DViewDefWindow.xaml.cs">
+      <DependentUpon>Proj3DViewDefWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProjTreeDefWindow.xaml.cs">
       <DependentUpon>ProjTreeDefWindow.xaml</DependentUpon>
@@ -142,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PreviewTableWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Proj3DViewDefWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

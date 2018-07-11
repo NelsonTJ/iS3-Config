@@ -361,6 +361,8 @@ namespace iS3.Config
             EngineeringMap emap = EMapsLB.SelectedItem as EngineeringMap;
             if (emap == null)
                 return;
+            if (MyMapView.Extent == null)
+                return;
             emap.XMin = MyMapView.Extent.XMin;
             emap.YMin = MyMapView.Extent.YMin;
             emap.XMax = MyMapView.Extent.XMax;
