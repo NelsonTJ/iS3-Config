@@ -33,7 +33,7 @@ namespace iS3.Config
             _dataPath = dataPath;
             _projID = projID;
             _u3dFile = _projID + ".unity3d";
-            _u3dFilePath = dataPath + "\\" + projID + "\\" + _u3dFile;
+            _u3dFilePath = dataPath +  "\\" + _u3dFile;
 
             Model3DTB.Text = _u3dFile;
 
@@ -52,9 +52,8 @@ namespace iS3.Config
             }
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private void OK_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
             Close();
         }
     }

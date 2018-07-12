@@ -51,7 +51,6 @@ namespace iS3.Config
 
         private void OKBtn_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
             Close();
         }
     }

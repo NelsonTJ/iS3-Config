@@ -6,7 +6,7 @@
         xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Project location and description config" Height="450" Width="800">
+        Title="Project location and description" Height="450" Width="800">
     <Grid>
         <Grid.Resources>
             <esri:PictureMarkerSymbol x:Key="DefaultMarkerSymbol"

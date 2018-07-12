@@ -78,8 +78,15 @@ namespace iS3.Config
             newTree.RefDomainName = name;
 
             Tree tree = e as Tree;
-            if (tree != null)
+            if (tree == null)
+            {
+                Domain domain = _prj.domains[name];
+                domain.root.Children.Add(newTree);
+            }
+            else
+            {
                 tree.Children.Add(newTree);
+            }
         }
 
         private void TreeCtrl_OnTreeRemoved(object sender, object e)

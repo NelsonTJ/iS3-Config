@@ -60,7 +60,7 @@ namespace iS3.Config
 
         private void AddMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (OnTreeAdded != null && MyTreeView.SelectedItem != null)
+            if (OnTreeAdded != null)
                 OnTreeAdded(this, MyTreeView.SelectedItem);
         }
 

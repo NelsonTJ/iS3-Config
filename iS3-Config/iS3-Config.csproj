@@ -48,16 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.UnityWebPlayerAXLib">
-      <HintPath>..\..\Output\libs\AxInterop.UnityWebPlayerAXLib.dll</HintPath>
-    </Reference>
     <Reference Include="Esri.ArcGISRuntime, Version=10.2.5.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Output\libs\arcgis\Esri.ArcGISRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.UnityWebPlayerAXLib">
-      <HintPath>..\..\Output\libs\Interop.UnityWebPlayerAXLib.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="IS3.ArcGIS">
       <HintPath>..\..\IS3-ArcGIS\obj\Debug\IS3.ArcGIS.dll</HintPath>
@@ -80,12 +73,6 @@
     <Reference Include="U3DPlayerAxLib">
       <HintPath>..\..\U3DPlayerAxLib\U3DPlayerAxLib\obj\Debug\U3DPlayerAxLib.dll</HintPath>
     </Reference>
-    <Reference Include="UnityCore">
-      <HintPath>..\..\Output\libs\UnityCore.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\Output\libs\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -107,6 +94,9 @@
     </Compile>
     <Compile Include="DbHelper.cs" />
     <Compile Include="ObjectTypeHelper.cs" />
+    <Compile Include="Preview2DLayerWindow.xaml.cs">
+      <DependentUpon>Preview2DLayerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PreviewTableWindow.xaml.cs">
       <DependentUpon>PreviewTableWindow.xaml</DependentUpon>
     </Compile>
@@ -158,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LayerDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Preview2DLayerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

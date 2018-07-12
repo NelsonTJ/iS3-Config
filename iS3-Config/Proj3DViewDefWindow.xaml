@@ -6,7 +6,7 @@
         xmlns:u3d="clr-namespace:U3DPlayerAxLib;assembly=U3DPlayerAxLib"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Step 3 - 3D model config" Height="450" Width="800">
+        Title="Preview 3D model" Height="400" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
         <!-- Col 1 -->
@@ -32,7 +32,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="70" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
@@ -60,9 +60,9 @@
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="3"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
                    Text="" Foreground="Red" />
-        <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="2" Margin="0,0,10,0"
-                Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
-                Click="Next_Click"/>
+        <Button x:Name="OKBtn" Grid.Row="2" Grid.Column="2" Margin="0,0,10,0"
+                Content="OK" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
+                Click="OK_Click"/>
 
     </Grid>
 </Window>

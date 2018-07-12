@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Step 5 - Project tree config" Height="450" Width="800">
+        Title="Step 4 - Project tree config" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -55,9 +55,9 @@
         <!-- Row 2 -->
         <TextBlock x:Name="PromptTB" Grid.Row="2" Grid.ColumnSpan="2"
                    VerticalAlignment="Center" HorizontalAlignment="Left"
-                   Text="" Foreground="Red" />
+                   Text="Right click on the tree to add and remove an item." Foreground="Red" />
         <Button x:Name="NextBtn" Grid.Row="2" Grid.Column="2" Margin="0,0,10,0"
-                Content="Next" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
+                Content="Finish" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100" Height="20"
                 Click="Next_Click"/>
 
     </Grid>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Step 4 - Domain config" Height="450" Width="800">
+        Title="Step 3 - Domain config" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -58,9 +58,11 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
@@ -109,7 +111,7 @@
                 </StackPanel>
 
                 <Button x:Name="PreviewTableBtn" Grid.Row="5" Grid.ColumnSpan="2" Content="Preview Table..."
-                        Width="100" Click="PreviewTableBtn_Click"/>
+                        Width="120" Click="PreviewTableBtn_Click"/>
 
                 <CheckBox Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Content="Has 2D Model" IsChecked="{Binding HasGeometry, Mode=TwoWay}" />
@@ -123,17 +125,23 @@
                         Click="TwoDimLayerBtn_Click"/>
                 </StackPanel>
 
-                <CheckBox Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <Button x:Name="Preview2DBtn" Grid.Row="9" Grid.ColumnSpan="2" Content="Preview 2D Layer..."
+                        Width="120" Click="Preview2DLayerBtn_Click"/>
+
+                <CheckBox Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Content="Has 3D Model" IsChecked="{Binding Has3D, Mode=TwoWay}" />
 
-                <TextBlock Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="3D Layer" />
-                <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.Column="1" Margin="0,0,5,0">
+                <StackPanel Orientation="Horizontal" Grid.Row="12" Grid.Column="1" Margin="0,0,5,0">
                     <TextBox Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding Layer3DName, Mode=TwoWay}"/>
                     <Button x:Name="ThreeDimLayerBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Click="ThreeDimLayerBtn_Click"/>
                 </StackPanel>
+            
+                <Button x:Name="Preview3DBtn" Grid.Row="13" Grid.ColumnSpan="2" Content="Preview 3D Model..."
+                        Width="120" Click="Preview3DLayerBtn_Click"/>
             </Grid>
         </GroupBox>
         

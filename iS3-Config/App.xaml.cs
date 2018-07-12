@@ -32,10 +32,6 @@
 //**          iS3.Core
 //**          ArcGIS Runtime SDK for .NET 10.2.5
 //**          U3DPlayerAxLib
-//**          AxInterop.UnityWebPlayerAXLib
-//**          Interop.UnityWebPlayerAXLib
-//**          UnityCore
-//**          UnityEngine
 //
 
 using System;
@@ -148,17 +144,18 @@ namespace iS3.Config
                 return false;
             }
 
-            // Step 3 - Config 3D map
+            // Config 3D map
+            //      Note: Because there is nothing to configure for 3D, add "preview 3D model" in DomainDefWindow
             //
-            Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
-            proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            success = proj3DViewDefWnd.ShowDialog();
-            if (success == null || success.Value == false)
-            {
-                return false;
-            }
+            //Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            //proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //success = proj3DViewDefWnd.ShowDialog();
+            //if (success == null || success.Value == false)
+            //{
+            //    return false;
+            //}
 
-            // Step 4 - Config domains of the project
+            // Step 3 - Config domains of the project
             //
             List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
             Project prj = ConfigCore.LoadProject(dataPath, projID);
@@ -170,7 +167,7 @@ namespace iS3.Config
                 return false;
             }
 
-            // Step 5 - Config project tree
+            // Step 4 - Config project tree
             //
             ProjTreeDefWindow prjTreeDefWnd = new ProjTreeDefWindow(prj);
             prjTreeDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -179,10 +176,6 @@ namespace iS3.Config
             {
                 return false;
             }
-
-            // Step 6 - Config 2d & 3d views
-            //
-
 
             // Write ProjectList.xml
             //
@@ -195,6 +188,17 @@ namespace iS3.Config
             // Write <projectID>.py
             //
             ConfigCore.WriteViewsDef(iS3Path, projID, projDef);
+
+            string format = 
+                "Congratulations!\r\n" +
+                "The following files has been generated successfully.\r\n" +
+                "    {0}\\ProjectList.xml\r\n" +
+                "    {1}\\{2}.xml\r\n" +
+                "    {3}\\IS3Py\\{4}.py\r\n" +
+                "The {5} project is ready to use in iS3.";
+
+            string str = string.Format(format, dataPath, dataPath, projID, iS3Path, projID, projID);
+            MessageBox.Show(str, "Success", MessageBoxButton.OK);
 
             return true;
         }

@@ -109,9 +109,9 @@ namespace iS3.Config
                 dObjsDef.TableNameSQL, dObjsDef.ConditionSQL, dObjsDef.OrderSQL);
 
             PreviewTableWindow previewTblWnd = new PreviewTableWindow(TableNameTB.Text, dataSet);
-            previewTblWnd.Owner = this;
+            previewTblWnd.Owner = this.Owner;
             previewTblWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            previewTblWnd.ShowDialog();
+            previewTblWnd.Show();
         }
 
         private void TwoDimLayerBtn_Click(object sender, RoutedEventArgs e)
@@ -243,6 +243,27 @@ namespace iS3.Config
                 if (DObjsLB.Items.Count > 0)
                     DObjsLB.SelectedIndex = 0;
             }
+        }
+
+        private void Preview2DLayerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string lyrName = LayerNameTB.Text;
+            Preview2DLayerWindow preview2dWnd = new Preview2DLayerWindow(_prjDef, lyrName);
+            preview2dWnd.Owner = this.Owner;
+            preview2dWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            preview2dWnd.Title += ": " + lyrName;
+            preview2dWnd.Show();
+        }
+
+        private void Preview3DLayerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string dataPath = _prjDef.LocalFilePath;
+            string projID = _prjDef.ID;
+
+            Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            proj3DViewDefWnd.Owner = this.Owner;
+            proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            proj3DViewDefWnd.Show();
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
