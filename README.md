@@ -17,4 +17,4 @@ iS3-Config单机版源代码[下载地址](https://github.com/NelsonTJ/iS3-Confi
 
 注：请将iS3-Config源代码放到iS3-Desktop-Standalone/iS3-Config目录下编译、运行，如下图所示。
 
-![](./fig/config.png)
+![](./images/config.png)
