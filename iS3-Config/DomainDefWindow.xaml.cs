@@ -13,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using IS3.Core;
-using IS3.Unity.Webplayer.UnityCore;
 
 namespace iS3.Config
 {
@@ -25,9 +24,9 @@ namespace iS3.Config
         ProjectDefinition _prjDef;
         Project _prj;
         List<EMapLayers> _eMapLayersList;
-        UnityLayer _unityLayer;
+
         public DomainDefWindow(ProjectDefinition prjDef, Project prj,
-            List<EMapLayers> eMapLayersList,UnityLayer unityLayer )
+            List<EMapLayers> eMapLayersList)
         {
             InitializeComponent();
 
@@ -35,7 +34,6 @@ namespace iS3.Config
             _prj = prj;
             _eMapLayersList = eMapLayersList;
             DomainListLB.ItemsSource = prj.domains;
-            _unityLayer = unityLayer;
             Loaded += DomainDefWindow_Loaded;
         }
 
@@ -138,22 +136,7 @@ namespace iS3.Config
 
         private void ThreeDimLayerBtn_Click(object sender, RoutedEventArgs e)
         {
-            DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
-            if (DObjsDef == null)
-                return;
 
-            Select3DEMapLayersWindow select3DEMapLayersWnd = new Select3DEMapLayersWindow(_unityLayer);
-            select3DEMapLayersWnd.Owner = this;
-            select3DEMapLayersWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            bool? ok = select3DEMapLayersWnd.ShowDialog();
-            if (ok != null && ok.Value == true)
-            {
-                if (select3DEMapLayersWnd.SelectLayerName != null)
-                {
-                    Layer3DNameTB.Text = select3DEMapLayersWnd.SelectLayerName;
-                    DObjsDef.Layer3DName = select3DEMapLayersWnd.SelectLayerName;
-                }
-            }
         }
 
         private void AddDomain_Click(object sender, RoutedEventArgs e)
