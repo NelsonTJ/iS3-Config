@@ -41,6 +41,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using IS3.Core;
+using IS3.Unity.Webplayer.UnityCore;
 
 namespace iS3.Config
 {
@@ -137,13 +138,21 @@ namespace iS3.Config
             {
                 return false;
             }
+            //Step 3.3 -Config 3d map
+            //
+            Proj3DDefWindow proj3DDefWindow = new Proj3DDefWindow(projDef);
+            success = proj3DDefWindow.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
 
             // Step 4 - Config domains of the project
             //
             List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
-
+            UnityLayer unitylayer = proj3DDefWindow.unityLayer;
             Project prj = ConfigCore.LoadProject(dataPath, projID);
-            DomainDefWindow domainDefWnd = new DomainDefWindow(projDef, prj, eMapLayersList);
+            DomainDefWindow domainDefWnd = new DomainDefWindow(projDef, prj, eMapLayersList,unitylayer);
             success = domainDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {

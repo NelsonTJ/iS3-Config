@@ -48,15 +48,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AxInterop.UnityWebPlayerAXLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Output\bin\AxInterop.UnityWebPlayerAXLib.dll</HintPath>
+    </Reference>
     <Reference Include="Esri.ArcGISRuntime, Version=10.2.5.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Output\libs\arcgis\Esri.ArcGISRuntime.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.UnityWebPlayerAXLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>Output\bin\Interop.UnityWebPlayerAXLib.dll</HintPath>
+    </Reference>
     <Reference Include="IS3.ArcGIS">
-      <HintPath>..\..\IS3-ArcGIS\obj\Debug\IS3.ArcGIS.dll</HintPath>
+      <HintPath>E:\0-Development\iS3\iS3-Standalone-V1.0\Output\bin\IS3.ArcGIS.dll</HintPath>
     </Reference>
     <Reference Include="IS3.Core">
-      <HintPath>..\..\IS3-Core\IS3-Core\obj\Debug\IS3.Core.dll</HintPath>
+      <HintPath>E:\0-Development\iS3\iS3-Standalone-V1.0\Output\bin\IS3.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IS3.Unity.Webplayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Output\bin\IS3.Unity.Webplayer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -70,11 +83,15 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="U3DPlayerAxLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Output\bin\U3DPlayerAxLib.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\..\Output\libs\Xceed.Wpf.Toolkit.dll</HintPath>
+      <HintPath>E:\0-Development\iS3\iS3-Standalone-V1.0\Output\libs\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +109,12 @@
     <Compile Include="ObjectTypeHelper.cs" />
     <Compile Include="PreviewTableWindow.xaml.cs">
       <DependentUpon>PreviewTableWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Proj3DDefWindow.xaml.cs">
+      <DependentUpon>Proj3DDefWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Select3DEMapLayersWindow.xaml.cs">
+      <DependentUpon>Select3DEMapLayersWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectEMapLayersWindow.xaml.cs">
       <DependentUpon>SelectEMapLayersWindow.xaml</DependentUpon>
@@ -139,6 +162,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Proj3DDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProjEMapDefWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,6 +181,10 @@
     <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Select3DEMapLayersWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SelectEMapLayersWindow.xaml">
       <SubType>Designer</SubType>
