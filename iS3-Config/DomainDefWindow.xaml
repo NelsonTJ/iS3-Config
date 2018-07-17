@@ -5,15 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Domain definition" Height="450" Width="800">
+        Title="Step 3 - Domain config" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="380" />
+            <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
@@ -34,7 +33,7 @@
                 <Button Content="-" Width="25" Margin="5,0,5,0" Click="RemoveDomain_Click" />
             </StackPanel>
             <TextBlock Text="Digital objects:" />
-            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="180"
+            <ListBox x:Name="DObjsLB" Height="Auto" MinHeight="175"
                      SelectionChanged="DObjsLB_SelectionChanged"
                      ItemContainerStyle="{StaticResource MyListBoxStyle}">
                 <ListBox.ItemTemplate>
@@ -59,9 +58,11 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
@@ -74,18 +75,18 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Name" />
-                <TextBox Width="200" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBox Width="400" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"
                          Margin="0,0,5,0" Text="{Binding Name, Mode=TwoWay}" IsReadOnly="True"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Type" />
-                <ComboBox x:Name="TypeCB" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="Auto" MinWidth="200"
+                <ComboBox x:Name="TypeCB" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Width="Auto" MinWidth="400"
                           Text="{Binding Type, Mode=TwoWay}" IsEditable="True" IsReadOnly="True" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Table name" />
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0,0,5,0">
-                    <TextBox x:Name="TableNameTB" Width="200"  VerticalAlignment="Center" Margin="0,0,5,0"
+                    <TextBox x:Name="TableNameTB" Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding TableNameSQL, Mode=TwoWay}"/>
                     <Button x:Name="TableNameSQLBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Click="TableNameSQLBtn_Click"/>
@@ -94,7 +95,7 @@
                 <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Condition (SQL)" />
                 <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0">
-                    <TextBox Width="200"  VerticalAlignment="Center" Margin="0,0,5,0"
+                    <TextBox Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding ConditionSQL, Mode=TwoWay}"/>
                     <Button x:Name="ConditionSQLBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Visibility="Collapsed"/>
@@ -103,14 +104,14 @@
                 <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="Order (SQL)" />
                 <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1" Margin="0,0,5,0">
-                    <TextBox Width="200"  VerticalAlignment="Center" Margin="0,0,5,0"
+                    <TextBox Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding OrderSQL, Mode=TwoWay}"/>
                     <Button x:Name="OrderSQLBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Visibility="Collapsed"/>
                 </StackPanel>
 
                 <Button x:Name="PreviewTableBtn" Grid.Row="5" Grid.ColumnSpan="2" Content="Preview Table..."
-                        Width="100" Click="PreviewTableBtn_Click"/>
+                        Width="120" Click="PreviewTableBtn_Click"/>
 
                 <CheckBox Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Content="Has 2D Model" IsChecked="{Binding HasGeometry, Mode=TwoWay}" />
@@ -118,16 +119,19 @@
                 <TextBlock Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="2D Layer" />
                 <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1" Margin="0,0,5,0">
-                    <TextBox x:Name="LayerNameTB" Width="200"  VerticalAlignment="Center" Margin="0,0,5,0"
+                    <TextBox x:Name="LayerNameTB" Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding GISLayerName, Mode=TwoWay}"/>
                     <Button x:Name="TwoDimLayerBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Click="TwoDimLayerBtn_Click" Height="25" VerticalAlignment="Top"/>
                 </StackPanel>
 
-                <CheckBox Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <Button x:Name="Preview2DBtn" Grid.Row="9" Grid.ColumnSpan="2" Content="Preview 2D Layer..."
+                        Width="120" Click="Preview2DLayerBtn_Click"/>
+
+                <CheckBox Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Content="Has 3D Model" IsChecked="{Binding Has3D, Mode=TwoWay}" />
 
-                <TextBlock Grid.Row="11" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
+                <TextBlock Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="3D Layer" />
                 <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.Column="1" Margin="0,0,5,0">
                     <TextBox  x:Name="Layer3DNameTB" Width="200"  VerticalAlignment="Center" Margin="0,0,5,0"
@@ -135,6 +139,9 @@
                     <Button x:Name="ThreeDimLayerBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Click="ThreeDimLayerBtn_Click"/>
                 </StackPanel>
+            
+                <Button x:Name="Preview3DBtn" Grid.Row="13" Grid.ColumnSpan="2" Content="Preview 3D Model..."
+                        Width="120" Click="Preview3DLayerBtn_Click"/>
             </Grid>
         </GroupBox>
         

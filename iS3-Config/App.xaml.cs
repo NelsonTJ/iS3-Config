@@ -1,4 +1,4 @@
-﻿//************************  Notice  **********************************
+//************************  Notice  **********************************
 //** This file is part of iS3
 //**
 //** Copyright (c) 2018 Tongji University iS3 Team. All rights reserved.
@@ -25,11 +25,13 @@
 //**          ProjectList.xml
 //**          <ProjectName>.xml
 //**          <ProjectName>\*.*
-//** This program depends on the following library:
-//**          .NET Framework 4.5
-//**          ArcGIS Runtime SDK for .NET 10.2.5
-//**          iS3.Core
+//** This program depends on .NET Framework 4.5
+//
+//** This program depends on the following library (apart from .NET library):
 //**          Xceed.Wpf.Toolkit
+//**          iS3.Core
+//**          ArcGIS Runtime SDK for .NET 10.2.5
+//**          U3DPlayerAxLib
 //
 
 using System;
@@ -93,9 +95,10 @@ namespace iS3.Config
         {
             bool? success;
 
-            // Step 1 - Config path to iS3 and data directory
+            // Preparation Step 1 - Config path to iS3 and data directory
             //
             ConfPathWindow mainWnd = new ConfPathWindow();
+            mainWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = mainWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -104,11 +107,12 @@ namespace iS3.Config
             iS3Path = mainWnd.ExePath;
             dataPath = mainWnd.DataPath;
 
-            // Step 2 - Config projects
+            // Preparation Step 2 - Config projects
             //
             string projListFile = dataPath + "\\ProjectList.xml";
             ProjectList projList = ConfigCore.LoadProjectList(projListFile);
             ProjectsWindow projsWnd = new ProjectsWindow(projList);
+            projsWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projsWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -118,21 +122,23 @@ namespace iS3.Config
             projLocX = projsWnd.ProjLocX;
             projLocY = projsWnd.ProjLocY;
 
-            // Step 3.1 - Config project general definition
+            // Step 1 - Config project general definition
             //
             ProjectDefinition projDef = ConfigCore.LoadProjectDefinition(dataPath, projID);
             if (projDef == null)
                 projDef = ConfigCore.CreateProjectDefinition(dataPath, projID);
             ProjGnrDefWindow projGnrDefWnd = new ProjGnrDefWindow(projDef);
+            projGnrDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projGnrDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;
             }
 
-            // Step 3.2 - Config engineering maps definition of the project
+            // Step 2 - Config engineering maps definition of the project
             //
             ProjEMapDefWindow projEMapsDefWnd = new ProjEMapDefWindow(projDef);
+            projEMapsDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             success = projEMapsDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
@@ -147,23 +153,63 @@ namespace iS3.Config
                 return false;
             }
 
-            // Step 4 - Config domains of the project
+            // Config 3D map
+            //      Note: Because there is nothing to configure for 3D, add "preview 3D model" in DomainDefWindow
+            //
+            //Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            //proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //success = proj3DViewDefWnd.ShowDialog();
+            //if (success == null || success.Value == false)
+            //{
+            //    return false;
+            //}
+
+            // Step 3 - Config domains of the project
             //
             List<EMapLayers> eMapLayersList = projEMapsDefWnd.EMapLayersList;
             UnityLayer unitylayer = proj3DDefWindow.unityLayer;
             Project prj = ConfigCore.LoadProject(dataPath, projID);
             DomainDefWindow domainDefWnd = new DomainDefWindow(projDef, prj, eMapLayersList,unitylayer);
+            domainDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             success = domainDefWnd.ShowDialog();
             if (success == null || success.Value == false)
             {
                 return false;
             }
 
-
+            // Step 4 - Config project tree
             //
-            //ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
-            //ConfigCore.WriteProjectDefinition(dataPath, projID, projDef);
+            ProjTreeDefWindow prjTreeDefWnd = new ProjTreeDefWindow(prj);
+            prjTreeDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            success = prjTreeDefWnd.ShowDialog();
+            if (success == null || success.Value == false)
+            {
+                return false;
+            }
 
+            // Write ProjectList.xml
+            //
+            ConfigCore.WriteProjectList(projListFile, projsWnd.ProjectList);
+            
+            // Write <projectID>.xml
+            //
+            ConfigCore.WriteProject(dataPath, projID, projDef, prj);
+
+            // Write <projectID>.py
+            //
+            ConfigCore.WriteViewsDef(iS3Path, projID, projDef);
+
+            string format = 
+                "Congratulations!\r\n" +
+                "The following files has been generated successfully.\r\n" +
+                "    {0}\\ProjectList.xml\r\n" +
+                "    {1}\\{2}.xml\r\n" +
+                "    {3}\\IS3Py\\{4}.py\r\n" +
+                "The {5} project is ready to use in iS3.";
+
+            string str = string.Format(format, dataPath, dataPath, projID, iS3Path, projID, projID);
+            MessageBox.Show(str, "Success", MessageBoxButton.OK);
 
             return true;
         }

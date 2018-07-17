@@ -13,7 +13,8 @@ namespace iS3.Config
     public class DbHelper
     {
         static List<string> _tableNames = null;
-        static char[] _separator = new char[] { ',' };
+        public static char[] Separator = new char[] { ',' };
+        public static string TablePrefix = "dbo_";
 
         // Load MDB file table names, skip system tables
         //
@@ -68,13 +69,13 @@ namespace iS3.Config
 
                 // tableNameSQL,orderSQL,conditionSQL may contain
                 // multiple table names speratored by comma
-                string[] names = tableNameSQL.Split(_separator);
+                string[] names = tableNameSQL.Split(Separator);
                 string[] orders = null;
                 string[] conditions = null;
                 if (orderSQL != null)
-                    orders = orderSQL.Split(_separator);
+                    orders = orderSQL.Split(Separator);
                 if (conditionSQL != null)
-                    conditions = conditionSQL.Split(_separator);
+                    conditions = conditionSQL.Split(Separator);
 
                 for (int i = 0; i < names.Count(); ++i)
                 {

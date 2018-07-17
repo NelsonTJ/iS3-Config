@@ -8,7 +8,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:iS3.Config"
         mc:Ignorable="d"
-        Title="Engineering map definition" Height="450" Width="800">
+        Title="Step 2: 2D model config" Height="450" Width="800">
     <Grid>
         <Grid.Resources>
             <esri:ViewpointExtent x:Key="China"
@@ -52,7 +52,8 @@
         </Grid>
         
         <!-- Col 2 -->
-        <esri:MapView x:Name="MyMapView" WrapAround="True" Grid.Column="1">
+        <esri:MapView x:Name="MyMapView" ExtentChanged="MyMapView_ExtentChanged"
+                      WrapAround="True" Grid.Column="1">
             <esri:Map x:Name="Map" >
             </esri:Map>
         </esri:MapView>

@@ -86,10 +86,27 @@
     <Reference Include="U3DPlayerAxLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Output\bin\U3DPlayerAxLib.dll</HintPath>
+
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid">
+      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
       <HintPath>E:\0-Development\iS3\iS3-Standalone-V1.0\Output\libs\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
@@ -107,6 +124,9 @@
     </Compile>
     <Compile Include="DbHelper.cs" />
     <Compile Include="ObjectTypeHelper.cs" />
+    <Compile Include="Preview2DLayerWindow.xaml.cs">
+      <DependentUpon>Preview2DLayerWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PreviewTableWindow.xaml.cs">
       <DependentUpon>PreviewTableWindow.xaml</DependentUpon>
     </Compile>
@@ -121,6 +141,9 @@
     </Compile>
     <Compile Include="SelectTableNamesWindow.xaml.cs">
       <DependentUpon>SelectTableNamesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TreeUserControl.xaml.cs">
+      <DependentUpon>TreeUserControl.xaml</DependentUpon>
     </Compile>
     <Page Include="AddDObjWindow.xaml">
       <SubType>Designer</SubType>
@@ -158,6 +181,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Preview2DLayerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PreviewTableWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -178,6 +205,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ProjTreeDefWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,6 +222,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectTableNamesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TreeUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -229,6 +264,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -248,4 +284,5 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\Esri.ArcGISRuntime.10.2.5.857\build\net45\Esri.ArcGISRuntime.targets" Condition="Exists('packages\Esri.ArcGISRuntime.10.2.5.857\build\net45\Esri.ArcGISRuntime.targets')" />
 </Project>
