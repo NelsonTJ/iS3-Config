@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using IS3.Unity.Webplayer;
 using IS3.Core;
 using IS3.Unity.Webplayer.UnityCore;
+using System.IO;
 
 namespace iS3.Config
 {
@@ -46,15 +47,26 @@ namespace iS3.Config
             {
                 string file = dialog.FileName;
                 u3dTB.Text = file;
+                //移动目录
+                MoveFile(_projdef.LocalFilePath + "\\" + dialog.SafeFileName, file);
+                //新建emap
                 EngineeringMap map = new EngineeringMap();
                 map.LocalMapFileName = dialog.SafeFileName;
 
+                //添加三维视图-unitywebplayer
                 U3DView u3DView = new U3DView(new Project() { projDef = _projdef }, map);
-                u3DView.UnityLayerHanlder += UnityLayerListener;
                 ViewHolder.Children.Add(u3DView);
+                //添加图层获取事件
+                u3DView.UnityLayerHanlder += UnityLayerListener;
                 u3DView.view.loadPredefinedLayers();
-
-
+            }
+        }
+        //判断工程目录下是否存在文件，若不存在，则复制到工程目录下
+        public void MoveFile(string aimPath,string nowPath)
+        {
+            if (!File.Exists(aimPath))
+            {
+                File.Copy(nowPath, aimPath);
             }
         }
         private async void Next_Click(object sender, RoutedEventArgs e)
