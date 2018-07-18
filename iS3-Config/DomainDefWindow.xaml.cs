@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using IS3.Core;
+using IS3.Unity.Webplayer.UnityCore;
 
 namespace iS3.Config
 {
@@ -24,6 +25,7 @@ namespace iS3.Config
         ProjectDefinition _prjDef;
         Project _prj;
         List<EMapLayers> _eMapLayersList;
+        UnityLayer _u3dLayer;
 
         public DomainDefWindow(ProjectDefinition prjDef, Project prj,
             List<EMapLayers> eMapLayersList)
@@ -136,7 +138,29 @@ namespace iS3.Config
 
         private void ThreeDimLayerBtn_Click(object sender, RoutedEventArgs e)
         {
+            DGObjectsDefinition DObjsDef = DObjsDefGrid.DataContext as DGObjectsDefinition;
+            if (DObjsDef == null)
+                return;
 
+            if (_u3dLayer == null)
+            {
+                PromptTB.Text = "Click the button again until the 3D model is loaded.";
+                Preview3DLayerBtn_Click(this, null);
+                return;
+            }
+
+            Select3DEMapLayersWindow select3DEMapLayersWnd = new Select3DEMapLayersWindow(_u3dLayer);
+            select3DEMapLayersWnd.Owner = this;
+            select3DEMapLayersWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? ok = select3DEMapLayersWnd.ShowDialog();
+            if (ok != null && ok.Value == true)
+            {
+                if (select3DEMapLayersWnd.SelectLayerName != null)
+                {
+                    Layer3DNameTB.Text = select3DEMapLayersWnd.SelectLayerName;
+                    DObjsDef.Layer3DName = select3DEMapLayersWnd.SelectLayerName;
+                }
+            }
         }
 
         private void AddDomain_Click(object sender, RoutedEventArgs e)
@@ -257,10 +281,11 @@ namespace iS3.Config
 
         private void Preview3DLayerBtn_Click(object sender, RoutedEventArgs e)
         {
-            string dataPath = _prjDef.LocalFilePath;
-            string projID = _prjDef.ID;
-
-            Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(_prjDef);
+            proj3DViewDefWnd.Model3dLoaded += (send, args)=>
+            {
+                _u3dLayer = args;
+            };
             proj3DViewDefWnd.Owner = this.Owner;
             proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             proj3DViewDefWnd.Show();

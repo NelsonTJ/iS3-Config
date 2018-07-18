@@ -25,13 +25,15 @@
 //**          ProjectList.xml
 //**          <ProjectName>.xml
 //**          <ProjectName>\*.*
+//**
 //** This program depends on .NET Framework 4.5
 //
 //** This program depends on the following library (apart from .NET library):
 //**          Xceed.Wpf.Toolkit
 //**          iS3.Core
+//**          iS3.ArcGIS
+//**          iS3.Unity.Webplayer
 //**          ArcGIS Runtime SDK for .NET 10.2.5
-//**          U3DPlayerAxLib
 //
 
 using System;
@@ -147,7 +149,7 @@ namespace iS3.Config
             // Config 3D map
             //      Note: Because there is nothing to configure for 3D, add "preview 3D model" in DomainDefWindow
             //
-            //Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(dataPath, projID);
+            //Proj3DViewDefWindow proj3DViewDefWnd = new Proj3DViewDefWindow(projDef);
             //proj3DViewDefWnd.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             //success = proj3DViewDefWnd.ShowDialog();
             //if (success == null || success.Value == false)

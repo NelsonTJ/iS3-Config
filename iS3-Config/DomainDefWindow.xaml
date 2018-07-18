@@ -134,7 +134,7 @@
                 <TextBlock Grid.Row="12" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"
                    Margin="5,0,0,0" Text="3D Layer" />
                 <StackPanel Orientation="Horizontal" Grid.Row="12" Grid.Column="1" Margin="0,0,5,0">
-                    <TextBox Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
+                    <TextBox x:Name="Layer3DNameTB" Width="400"  VerticalAlignment="Center" Margin="0,0,5,0"
                              Text="{Binding Layer3DName, Mode=TwoWay}"/>
                     <Button x:Name="ThreeDimLayerBtn" Content="..." Width="25" HorizontalAlignment="Right"
                         Click="ThreeDimLayerBtn_Click"/>
